@@ -211,6 +211,8 @@ export const translations = {
 
 export const marqueeTips = {
   en: [
+    "Quran: 'O you who have believed, when you contract a debt for a specified term, write it down.' (Surah Al-Baqarah 2:282)",
+    "Quran: '[The servants of the Merciful are] those who, when they spend, are neither extravagant nor miserly, but hold a medium way between those.' (Surah Al-Furqan 25:67)",
     "Tip: Try to save at least 20% of your salary this month.",
     "Tip: Small daily expenses add up. Track your coffee, snack, and subscriptions!",
     "Tip: Repay your borrowed loans on expected dates to build credit & trust.",
@@ -219,6 +221,8 @@ export const marqueeTips = {
     "Tip: Save automatically at the start of the month, not just what is left over."
   ],
   bn: [
+    "কুরআন: 'হে ঈমানদারগণ! যখন তোমরা নির্দিষ্ট মেয়াদের জন্য ঋণের লেনদেন কর, তখন তা লিখে রাখ।' (সূরা আল-বাকারাহ ২:২৮২)",
+    "কুরআন: 'এবং তারা যখন ব্যয় করে, তখন অপব্যয় করে না এবং কার্পণ্যও করে না; বরং তাদের ব্যয় এতদুভয়ের মধ্যবর্তী ভারসাম্যপূর্ণ অবস্থায় থাকে।' (সূরা আল-ফুরকান ২৫:৬৭)",
     "পরামর্শ: এই মাসে আপনার আয়ের অন্তত ২০% সঞ্চয় করার চেষ্টা করুন।",
     "পরামর্শ: ছোট ছোট দৈনিক খরচ জমে বড় হয়। চা-নাস্তা এবং অনলাইন সাবস্ক্রিপশন ট্র‍্যাক করুন!",
     "পরামর্শ: বিশ্বাস ও সুসম্পর্ক বজায় রাখতে সময়মত ঋণ বা ধার পরিশোধ করুন।",
