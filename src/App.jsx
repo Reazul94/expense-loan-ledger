@@ -366,7 +366,7 @@ export default function App() {
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-center sm:text-left">
             <p className="flex items-center gap-1 text-slate-400 font-medium justify-center sm:justify-start">
               <Sparkles className="w-3 h-3 text-indigo-500" />
-              © {new Date().getFullYear()} WalletLedger Hub. {t.copyright}
+              © {new Date().getFullYear()} RKarim. {t.copyright}
             </p>
             <div className="flex items-center gap-3 justify-center">
               <button 
