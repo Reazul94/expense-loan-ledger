@@ -8,6 +8,7 @@ import LoanManager from './components/LoanManager';
 import Analytics from './components/Analytics';
 import SettingsPanel from './components/SettingsPanel';
 import DailyVerseCard from './components/DailyVerseCard';
+import DailyHadithCard from './components/DailyHadithCard';
 import { 
   Wallet, 
   ArrowLeftRight, 
@@ -262,8 +263,11 @@ export default function App() {
           t={t} 
         />
 
-        {/* Daily Quranic Verse Card */}
-        <DailyVerseCard lang={lang} t={t} />
+        {/* Daily Reflections Section (Quran & Hadith) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <DailyVerseCard lang={lang} t={t} />
+          <DailyHadithCard lang={lang} t={t} />
+        </div>
 
         {/* Dashboard Cards Row */}
         <DashboardOverview
