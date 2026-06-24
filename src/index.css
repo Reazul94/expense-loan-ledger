@@ -1,0 +1,198 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme variables */
+:root {
+  --bg-color: #18191a;
+  --text-color: #e4e6eb;
+  --card-bg: #242526;
+  --card-hover-bg: #2d2e30;
+  --border-color: #3e4042;
+  --border-hover-color: #4e5052;
+  --input-bg: #3a3b3c;
+  --input-focus-bg: #4e4f50;
+  --input-border: #4e5052;
+  --glow-color: rgba(24, 119, 242, 0.15);
+  --panel-bg: #242526;
+  --panel-border: #3e4042;
+}
+
+body.theme-light {
+  --bg-color: #ffffff;
+  --text-color: #0f172a;
+  --card-bg: #ffffff;
+  --card-hover-bg: #f8fafc;
+  --border-color: #e2e8f0;
+  --border-hover-color: #94a3b8;
+  --input-bg: #f1f5f9;
+  --input-focus-bg: #ffffff;
+  --input-border: #cbd5e1;
+  --glow-color: rgba(99, 102, 241, 0.05);
+  --panel-bg: #f8fafc;
+  --panel-border: #e2e8f0;
+}
+
+body.theme-mint {
+  --bg-color: #04140f;
+  --text-color: #e6fcf4;
+  --card-bg: rgba(6, 28, 22, 0.7);
+  --card-hover-bg: rgba(10, 42, 33, 0.85);
+  --border-color: rgba(16, 185, 129, 0.12);
+  --border-hover-color: rgba(16, 185, 129, 0.35);
+  --input-bg: rgba(5, 20, 16, 0.8);
+  --input-focus-bg: rgba(7, 28, 22, 0.9);
+  --input-border: rgba(16, 185, 129, 0.18);
+  --glow-color: rgba(16, 185, 129, 0.15);
+  --panel-bg: rgba(5, 28, 22, 0.8);
+  --panel-border: rgba(16, 185, 129, 0.15);
+}
+
+body.theme-solarized {
+  --bg-color: #002b36;
+  --text-color: #839496;
+  --card-bg: #073642;
+  --card-hover-bg: #0a4250;
+  --border-color: #586e75;
+  --border-hover-color: #b58900;
+  --input-bg: #002b36;
+  --input-focus-bg: #002b36;
+  --input-border: #586e75;
+  --glow-color: rgba(181, 137, 0, 0.2);
+  --panel-bg: #073642;
+  --panel-border: #586e75;
+}
+
+body.theme-dracula {
+  --bg-color: #282a36;
+  --text-color: #f8f8f2;
+  --card-bg: #1e1f29;
+  --card-hover-bg: #232430;
+  --border-color: #44475a;
+  --border-hover-color: #bd93f9;
+  --input-bg: #282a36;
+  --input-focus-bg: #282a36;
+  --input-border: #44475a;
+  --glow-color: rgba(189, 147, 249, 0.25);
+  --panel-bg: #1e1f29;
+  --panel-border: #44475a;
+}
+
+body.theme-onedark {
+  --bg-color: #21252b;
+  --text-color: #abb2bf;
+  --card-bg: #282c34;
+  --card-hover-bg: #2f343e;
+  --border-color: #3e4452;
+  --border-hover-color: #61afef;
+  --input-bg: #21252b;
+  --input-focus-bg: #21252b;
+  --input-border: #3e4452;
+  --glow-color: rgba(97, 175, 239, 0.2);
+  --panel-bg: #282c34;
+  --panel-border: #3e4452;
+}
+
+body.theme-nord {
+  --bg-color: #2e3440;
+  --text-color: #d8dee9;
+  --card-bg: #3b4252;
+  --card-hover-bg: #434c5e;
+  --border-color: #4c566a;
+  --border-hover-color: #88c0d0;
+  --input-bg: #2e3440;
+  --input-focus-bg: #2e3440;
+  --input-border: #4c566a;
+  --glow-color: rgba(136, 192, 208, 0.2);
+  --panel-bg: #3b4252;
+  --panel-border: #4c566a;
+}
+
+/* Premium styling overrides */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Glassmorphism utility */
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-card-hover {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-2px) scale(1.01);
+  background: var(--card-hover-bg);
+  border-color: var(--border-hover-color);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4), 0 0 15px -3px var(--glow-color);
+}
+
+/* Glow effects */
+.glow-indigo {
+  box-shadow: 0 0 40px -10px var(--glow-color);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 40px -10px rgba(16, 185, 129, 0.15);
+}
+
+.glow-rose {
+  box-shadow: 0 0 40px -10px rgba(244, 63, 94, 0.15);
+}
+
+.panel-container {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Custom Scrollbar for premium dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.6);
+}
+
+/* Custom styles for inputs */
+input, select, textarea {
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
+  transition: all 0.2s ease-in-out;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  background-color: var(--input-focus-bg);
+}
+
