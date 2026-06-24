@@ -167,6 +167,13 @@ export default function App() {
     showToast(t.toastReset);
   };
 
+  const handleImportAll = (importedData) => {
+    if (importedData.expenses) setExpenses(importedData.expenses);
+    if (importedData.loans) setLoans(importedData.loans);
+    if (importedData.incomes) setIncomes(importedData.incomes);
+    showToast(t.toastSuccessImport);
+  };
+
   return (
     <div className="min-h-screen flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
       
@@ -352,6 +359,8 @@ export default function App() {
           expenses={expenses}
           loans={loans}
           onResetAll={handleResetAll}
+          onImportAll={handleImportAll}
+          showToast={showToast}
           currentMonth={currentMonth}
           lang={lang}
           t={t}

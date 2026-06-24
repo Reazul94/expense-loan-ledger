@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Download, 
   Trash2, 
@@ -8,12 +8,44 @@ import {
   ShieldCheck,
   AlertOctagon,
   X,
-  BookOpen
+  BookOpen,
+  Upload
 } from 'lucide-react';
 
-export default function SettingsPanel({ expenses, loans, onResetAll, currentMonth, lang, t, onOpenStorageGuide }) {
+export default function SettingsPanel({ expenses, loans, onResetAll, onImportAll, showToast, currentMonth, lang, t, onOpenStorageGuide }) {
   const [resetConfirm, setResetConfirm] = useState(false);
   const [resetTimeoutId, setResetTimeoutId] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImportJSON = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(event.target.result);
+        
+        const hasExpenses = Array.isArray(parsed.expenses);
+        const hasLoans = Array.isArray(parsed.loans);
+        const hasIncomes = typeof parsed.incomes === 'object' && parsed.incomes !== null;
+
+        if (hasExpenses || hasLoans || hasIncomes) {
+          onImportAll(parsed);
+        } else {
+          showToast(t.toastErrorImport);
+        }
+      } catch (err) {
+        showToast(t.toastErrorImport);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
 
   // Export current month's expenses as CSV
   const handleExportCSV = () => {
@@ -100,7 +132,16 @@ export default function SettingsPanel({ expenses, loans, onResetAll, currentMont
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* Hidden File Input for Import */}
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          accept=".json" 
+          onChange={handleImportJSON} 
+          className="hidden" 
+        />
+
         {/* Storage Guide */}
         <button
           type="button"
@@ -128,6 +169,16 @@ export default function SettingsPanel({ expenses, loans, onResetAll, currentMont
         >
           <FileJson className="w-4.5 h-4.5" />
           {t.exportJson}
+        </button>
+
+        {/* JSON Import */}
+        <button
+          type="button"
+          onClick={handleImportClick}
+          className="flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400 font-semibold text-xs transition-all active:scale-[0.98]"
+        >
+          <Upload className="w-4.5 h-4.5" />
+          {t.importJson}
         </button>
 
         {/* Cache Reset (Double click confirmation) */}

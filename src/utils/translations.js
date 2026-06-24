@@ -62,6 +62,7 @@ export const translations = {
     settingsTitle: "Data Management & Cache Utilities",
     exportCsv: "Export Month to CSV",
     exportJson: "Export All Data (JSON)",
+    importJson: "Import Data (JSON)",
     resetDatabase: "Reset All Cache Database",
     resetConfirm: "Are you sure you want to delete all local expense and loan records? This cannot be undone.",
     storageTooltip: "All data is securely saved in your browser's localStorage. No external servers are contacted. Clearing your browser cookies or clicking Reset Database will clear this data.",
@@ -69,6 +70,8 @@ export const translations = {
     toastSuccessEdit: "Entry successfully updated!",
     toastSuccessDelete: "Entry deleted successfully!",
     toastReset: "Database has been reset completely.",
+    toastSuccessImport: "Database imported successfully!",
+    toastErrorImport: "Invalid backup file format!",
     currency: "$",
     // Legal & Guide
     terms: "Terms & Conditions",
@@ -163,6 +166,7 @@ export const translations = {
     settingsTitle: "ডাটাবেজ ব্যবস্থাপনা ও ক্যাশ ইউটিলিটি",
     exportCsv: "মাসিক CSV ডাউনলোড",
     exportJson: "সব ডাটা ডাউনলোড (JSON)",
+    importJson: "ডাটা ইম্পোর্ট করুন (JSON)",
     resetDatabase: "ডাটাবেজ ক্যাশ রিসেট",
     resetConfirm: "আপনি কি নিশ্চিত যে সমস্ত খরচের এবং ঋণের ডাটা মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।",
     storageTooltip: "আপনার সমস্ত তথ্য ব্রাউজারের localStorage-এ সংরক্ষিত থাকে। কোনো বহিরাগত সার্ভারের সাথে যোগাযোগ করা হয় না। ব্রাউজার ক্যাশ বা কুকিজ পরিষ্কার করলে অথবা রিসেট বাটনে ক্লিক করলে সমস্ত ডাটা মুছে যাবে।",
@@ -170,6 +174,8 @@ export const translations = {
     toastSuccessEdit: "সফলভাবে সংশোধন করা হয়েছে!",
     toastSuccessDelete: "সফলভাবে মুছে ফেলা হয়েছে!",
     toastReset: "ডাটাবেজ সম্পূর্ণ রিসেট করা হয়েছে।",
+    toastSuccessImport: "ডাটাবেজ সফলভাবে ইম্পোর্ট করা হয়েছে!",
+    toastErrorImport: "ভুল ফাইল ফরম্যাট!",
     currency: "৳",
     // Legal & Guide
     terms: "শর্তাবলী ও নীতিমালা",
