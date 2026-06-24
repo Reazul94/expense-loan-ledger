@@ -459,13 +459,27 @@ export default function App() {
                   <p className="font-medium text-slate-200 leading-relaxed">
                     {t.storageGuideDesc}
                   </p>
-                  <ul className="list-decimal list-inside space-y-3.5 pl-1.5">
+                  <ul className="list-decimal list-inside space-y-3.5 pl-1.5 mb-4">
                     {(t.storageGuideSteps || []).map((step, idx) => (
                       <li key={idx} className="leading-relaxed break-words whitespace-normal">
                         <span className="text-slate-300">{step}</span>
                       </li>
                     ))}
                   </ul>
+                  
+                  {/* Visual Guide Infographic */}
+                  <div className="mt-4 border border-slate-800/80 rounded-xl overflow-hidden bg-slate-950/40 p-1.5 flex flex-col items-center gap-1.5">
+                    <img 
+                      src={`${import.meta.env.BASE_URL || '/'}data_transfer_guide.png`} 
+                      alt="Data Import & Export Transfer Guide" 
+                      className="rounded-lg max-w-full h-auto w-full object-cover max-h-56 shadow-md border border-slate-900/60"
+                    />
+                    <span className="text-[10px] text-slate-500 font-semibold text-center mt-1">
+                      {lang === 'en' 
+                        ? 'Visual Flow: Export database to file → Upload on new device'
+                        : 'ভিজুয়াল ডায়াগ্রাম: ডাটাবেজ ফাইল এক্সপোর্ট করুন → নতুন ডিভাইসে আপলোড করুন'}
+                    </span>
+                  </div>
                 </>
               )}
 

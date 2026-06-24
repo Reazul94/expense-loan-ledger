@@ -84,9 +84,9 @@ export const translations = {
     storageGuideSteps: [
       "Auto-Save: Every transaction you add, edit, or delete is instantly saved into your browser's localStorage.",
       "Privacy First: Your data is never uploaded to any cloud server or database. It remains private to your device.",
-      "Exporting Backups: Use 'Export All Data' (JSON) to save a backup file to your computer.",
-      "Data Safety Warning: Clearing your browser history, cache, or cookies will erase your data. Always keep a JSON backup before clearing browser data.",
-      "Moving Devices: To transfer data to another computer or phone, export the JSON file and import it on the new device."
+      "How to Export: Go to the Utilities panel at the bottom, click 'Export All Data (JSON)', which downloads your 'expense_hub_database_backup.json' file.",
+      "How to Import: On a new device, click 'Import Data (JSON)' in the Utilities panel and select your downloaded backup file to instantly load your records.",
+      "Preventing Data Loss: Browser history resets, cookie wipes, or cache clears delete local records. Save a JSON backup file beforehand to prevent data loss."
     ],
     termsTitle: "Terms & Conditions",
     termsList: [
@@ -188,9 +188,9 @@ export const translations = {
     storageGuideSteps: [
       "অটো-সেভ: খরচ বা ঋণের প্রতিটি এন্ট্রি আপনার ব্রাউজারের localStorage-এ স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়।",
       "শতভাগ গোপনীয়তা: আপনার কোনো ডাটা ক্লাউড সার্ভারে বা ইন্টারনেটে পাঠানো হয় না। এটি আপনার ডিভাইসেই থাকে।",
-      "ব্যাকআপ ডাউনলোড: আপনার সমস্ত তথ্য কম্পিউটারে ব্যাকআপ রাখতে 'সব ডাটা ডাউনলোড (JSON)' বাটন ব্যবহার করুন।",
-      "ডাটা হারানোর সতর্কতা: ব্রাউজার ক্যাশ বা কুকিজ মুছে ফেললে আপনার জমানো হিসাব মুছে যাবে। তাই ক্যাশ মুছার আগে JSON ফাইল ব্যাকআপ রাখুন।",
-      "ডিভাইস পরিবর্তন: অন্য ফোন বা কম্পিউটারে হিসাব স্থানান্তর করতে প্রথমে JSON ব্যাকআপ ফাইলটি ডাউনলোড করুন এবং নতুন ডিভাইসে ইম্পোর্ট করুন।"
+      "ডাটা ব্যাকআপ বা এক্সপোর্ট: পেজের নিচের সেটিংস প্যানেলে যান এবং 'সব ডাটা ডাউনলোড (JSON)' বাটনে ক্লিক করে 'expense_hub_database_backup.json' ফাইলটি আপনার ডিভাইসে ডাউনলোড করুন।",
+      "ডাটা রিস্টোর বা ইম্পোর্ট: নতুন ডিভাইসে গিয়ে পেজের নিচের সেটিংস প্যানেলে 'ডাটা ইম্পোর্ট করুন (JSON)' বাটনে ক্লিক করে আগে ডাউনলোড করা ব্যাকআপ ফাইলটি নির্বাচন করুন।",
+      "ডাটা হারানোর সতর্কতা: ব্রাউজার ক্যাশ বা কুকিজ মুছে ফেললে আপনার জমানো হিসাব মুছে যাবে। তাই নিয়মিত বা ব্রাউজার পরিষ্কার করার আগে একটি JSON ব্যাকআপ সংরক্ষণ করুন।"
     ],
     termsTitle: "ব্যবহারের শর্তাবলী",
     termsList: [
