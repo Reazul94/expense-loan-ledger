@@ -182,7 +182,7 @@ export default function App() {
       <MarqueeBanner lang={lang} />
 
       {/* Main Premium Navbar */}
-      <header className="w-full border-b backdrop-blur-md sticky top-0 z-40 panel-container">
+      <header className="w-full border-b backdrop-blur-md relative md:sticky md:top-0 z-40 panel-container">
         <div className="max-w-7xl mx-auto px-4 py-3 md:h-16 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
           
           {/* Logo / Title */}
