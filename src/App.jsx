@@ -7,6 +7,7 @@ import ExpenseTracker from './components/ExpenseTracker';
 import LoanManager from './components/LoanManager';
 import Analytics from './components/Analytics';
 import SettingsPanel from './components/SettingsPanel';
+import DailyVerseCard from './components/DailyVerseCard';
 import { 
   Wallet, 
   ArrowLeftRight, 
@@ -260,6 +261,9 @@ export default function App() {
           lang={lang} 
           t={t} 
         />
+
+        {/* Daily Quranic Verse Card */}
+        <DailyVerseCard lang={lang} t={t} />
 
         {/* Dashboard Cards Row */}
         <DashboardOverview
