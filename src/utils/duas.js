@@ -103,6 +103,111 @@ export const propheticDuas = [
     english: "O Allah, I seek refuge in You from inability, laziness, cowardice, senility, and miserliness.",
     bangla: "হে আল্লাহ! আমি আপনার নিকট আশ্রয় চাই অক্ষমতা, অলসতা, কাপুরুষতা, বার্ধক্য এবং কৃপণতা থেকে।",
     reference: "Sahih al-Bukhari 6367"
+  },
+  {
+    id: 16,
+    arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكَسَلِ وَالْهَرَمِ وَالْمَغْرَمِ وَالْمَأْثَمِ",
+    english: "O Allah, I seek refuge with You from laziness, senility, heavy debt, and sin.",
+    bangla: "হে আল্লাহ! আমি আপনার নিকট আশ্রয় চাই অলসতা, অতি বার্ধক্য, ঋণের বোঝা এবং গুনাহ থেকে।",
+    reference: "Sahih al-Bukhari 6377"
+  },
+  {
+    id: 17,
+    arabic: "اللَّهُمَّ أَصْلِحْ لِي دِينِي الَّذِي هُوَ عِصْمَةُ أَمْرِي، وَأَصْلِحْ لِي دُنْيَايَ الَّتِي فِيهَا مَعَاشِي",
+    english: "O Allah, correct for me my religion which is the guard of my affairs, and make good for me my world in which is my livelihood.",
+    bangla: "হে আল্লাহ! আমার দ্বীনকে সংশোধন করে দিন যা আমার সব কাজের রক্ষাকবচ, এবং আমার দুনিয়াকে সংশোধন করে দিন যাতে আমার জীবিকা রয়েছে।",
+    reference: "Sahih Muslim 2697"
+  },
+  {
+    id: 18,
+    arabic: "رَبَّنَا آتِنَا مِن لَّدُنكَ رَحْمَةً وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًا",
+    english: "Our Lord, grant us from Yourself mercy and prepare for us from our affair right guidance.",
+    bangla: "হে আমাদের প্রতিপালক! আপনার নিকট থেকে আমাদের বিশেষ রহমত দান করুন এবং আমাদের কাজ সঠিক ও সুন্দরভাবে সম্পন্ন করার তাওফিক দিন।",
+    reference: "Surah Al-Kahf 18:10"
+  },
+  {
+    id: 19,
+    arabic: "اللَّهُمَّ اغْفِرْ لِي ذَنْبِي، وَوَسِّعْ لِي فِي دَارِي، وَبَارِكْ لِي فِي رِزْقِي",
+    english: "O Allah, forgive my sin, make my house spacious, and bless my provision.",
+    bangla: "হে আল্লাহ! আমার গুনাহ ক্ষমা করে দিন, আমার ঘরকে প্রশস্ত করে দিন এবং আমার রিজিকে বরকত দিন।",
+    reference: "Jami` at-Tirmidhi 3500"
+  },
+  {
+    id: 20,
+    arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى وَالسَّدَادَ",
+    english: "O Allah, I ask You for guidance and steadfastness.",
+    bangla: "হে আল্লাহ! আমি আপনার নিকট হেদায়েত এবং সঠিক পথের ওপর অবিচলতা প্রার্থনা করছি।",
+    reference: "Sahih Muslim 2725"
+  },
+  {
+    id: 21,
+    arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْفَقْرِ، وَالْقِلَّةِ، وَالذِّلَّةِ، وَأَعُوذُ بِكَ مِنْ أَنْ أَظْلِمَ أَوْ أُظْلَمَ",
+    english: "O Allah, I seek refuge in You from poverty, scarcity, and humiliation, and I seek refuge in You from oppressing others or being oppressed.",
+    bangla: "হে আল্লাহ! আমি আপনার নিকট আশ্রয় চাই অভাব-অনটন, স্বল্পতা ও অপমান থেকে; এবং আমি আপনার নিকট আশ্রয় চাই অন্য কারও ওপর জুলুম করা অথবা নিজে অত্যাচারিত হওয়া থেকে।",
+    reference: "Sunan Abi Dawud 1544"
+  },
+  {
+    id: 22,
+    arabic: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ",
+    english: "O Allah, I ask You for well-being in this world and the Hereafter.",
+    bangla: "হে আল্লাহ! আমি আপনার নিকট ইহকাল ও পরকালে নিরাপত্তা ও কল্যাণ (আফিয়াত) প্রার্থনা করছি।",
+    reference: "Sunan Abi Dawud 5074"
+  },
+  {
+    id: 23,
+    arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ مُنْكَرَاتِ الأَخْلاَقِ وَالأَعْمَالِ وَالأَهْوَاءِ",
+    english: "O Allah, I seek refuge in You from objectionable character, deeds, and desires.",
+    bangla: "হে আল্লাহ! আমি আপনার নিকট আশ্রয় চাই অসৎ চরিত্র, মন্দ কর্ম এবং কুপ্রবৃত্তি থেকে।",
+    reference: "Jami` at-Tirmidhi 3591"
+  },
+  {
+    id: 24,
+    arabic: "رَبِّ اجْعَلْنِي مُقِيمَ الصَّلَاةِ وَمِن ذُرِّيَّتِي ۚ رَبَّنَا وَتَقَبَّلْ دُعَاءِ",
+    english: "My Lord, make me an establisher of prayer, and [many] from my descendants. Our Lord, and accept my supplication.",
+    bangla: "হে আমার প্রতিপালক! আমাকে সালাত কায়েমকারী বানাও এবং আমার বংশধরদের মধ্য থেকেও। হে আমাদের প্রতিপালক! আর আমার দুআ কবুল করো।",
+    reference: "Surah Ibrahim 14:40"
+  },
+  {
+    id: 25,
+    arabic: "اللَّهُمَّ أَعُوذُ بِرِضَاكَ مِنْ سَخَطِكَ، وَبِمُعَافَاتِكَ مِنْ عُقُوبَتِكَ",
+    english: "O Allah, I seek refuge in Your pleasure from Your anger, and in Your forgiveness from Your punishment.",
+    bangla: "হে আল্লাহ! আমি আপনার সন্তুষ্টির মাধ্যমে আপনার অসন্তুষ্টি থেকে আশ্রয় চাই, এবং আপনার ক্ষমার মাধ্যমে আপনার শাস্তি থেকে আশ্রয় চাই।",
+    reference: "Sahih Muslim 2722"
+  },
+  {
+    id: 26,
+    arabic: "رَبَّنَا افْتَحْ بَيْنَنَا وَبَيْنَ قَوْمِنَا بِالْحَقِّ وَأَنتَ خَيْرُ الْفَاتِحِينَ",
+    english: "Our Lord, judge between us and our people in truth, and You are the best of judges.",
+    bangla: "হে আমাদের প্রতিপালক! আমাদের ও আমাদের জাতির মধ্যে সঠিকভাবে ফয়সালা করে দিন, আর আপনিই সর্বশ্রেষ্ঠ ফয়সালাকারী।",
+    reference: "Surah Al-A'raf 7:89"
+  },
+  {
+    id: 27,
+    arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَغَلَبَةِ الْعَدُوِّ وَشَمَاتَةِ الْأَعْدَاءِ",
+    english: "O Allah, I seek refuge in You from being overwhelmed by debt, being overpowered by enemies, and the malicious joy of enemies.",
+    bangla: "হে আল্লাহ! আমি আপনার নিকট আশ্রয় চাই ঋণের আধিপত্য, শত্রুর আধিপত্য এবং শত্রুদের উপহাস থেকে।",
+    reference: "Sunan an-Nasa'i 5475"
+  },
+  {
+    id: 28,
+    arabic: "اللَّهُمَّ اهْدِنِي لِمَا اخْتُلِفَ فِيهِ مِنَ الْحَقِّ بِإِذْنِكَ",
+    english: "O Allah, guide me to the truth concerning that wherein there has been disagreement, by Your permission.",
+    bangla: "হে আল্লাহ! সত্যের যে বিষয়ে মতভেদ তৈরি হয়েছে, আপনার হুকুমে আমাকে সেই সত্যের সঠিক পথ প্রদর্শন করুন।",
+    reference: "Sahih Muslim 770"
+  },
+  {
+    id: 29,
+    arabic: "اللَّهُمَّ آتِ نَفْسِي تَقْوَاهَا، وَزَكِّهَا أَنْتَ خَيْرُ مَنْ زَكَّاهَا",
+    english: "O Allah, grant my soul its piety and purify it, for You are the best to purify it.",
+    bangla: "হে আল্লাহ! আমার নফসকে তাকওয়া দান করুন এবং একে পবিত্র করুন, নিশ্চয়ই আপনিই নফস পবিত্র করার জন্য সর্বোত্তম।",
+    reference: "Sahih Muslim 2722"
+  },
+  {
+    id: 30,
+    arabic: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عِلْمٍ لَا يَنْفَعُ، وَمِنْ قَلْبٍ لَا يَخْشَعُ، وَمِنْ نَفْسٍ لَا تَشْبَعُ",
+    english: "O Allah, I seek refuge in You from knowledge which does not benefit, from a heart which is not humble, and from a soul which is not satisfied.",
+    bangla: "হে আল্লাহ! আমি আপনার নিকট আশ্রয় চাই এমন জ্ঞান থেকে যা কোনো উপকারে আসে না, এমন অন্তর থেকে যা বিনীত হয় না এবং এমন নফস থেকে যা কখনো তৃপ্ত হয় না।",
+    reference: "Sahih Muslim 2722"
   }
 ];
 
