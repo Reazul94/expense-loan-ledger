@@ -24,7 +24,11 @@ import {
   ShieldCheck,
   FileText,
   BookOpen,
-  X
+  X,
+  Download,
+  Monitor,
+  Smartphone,
+  Laptop
 } from 'lucide-react';
 
 export default function App() {
@@ -55,7 +59,19 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState('expenses'); // 'expenses' or 'loans'
   const [toasts, setToasts] = useState([]);
-  const [activeModal, setActiveModal] = useState(null); // 'terms' | 'privacy' | 'storage' | null
+  const [activeModal, setActiveModal] = useState(null); // 'terms' | 'privacy' | 'storage' | 'install' | null
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
 
 
   // Get active translation dictionary
@@ -204,6 +220,16 @@ export default function App() {
 
           {/* Controls: Theme & Language Switchers */}
           <div className="flex items-center gap-3">
+            {/* Install / Shortcut Button */}
+            <button
+              type="button"
+              onClick={() => setActiveModal('install')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg panel-container text-[10px] font-extrabold uppercase text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/5 transition-all cursor-pointer border-0"
+              title={lang === 'en' ? 'Install App / Add Shortcut' : 'অ্যাপ ইনস্টল / শর্টকাট যোগ'}
+            >
+              <Download className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <span className="hidden sm:inline">{lang === 'en' ? 'Add Shortcut' : 'শর্টকাট যোগ'}</span>
+            </button>
             {/* Theme Selector */}
             <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg panel-container">
               <Palette className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
@@ -464,6 +490,12 @@ export default function App() {
                     {t.storageGuideTitle}
                   </>
                 )}
+                {activeModal === 'install' && (
+                  <>
+                    <Laptop className="w-4.5 h-4.5 text-indigo-400" />
+                    {lang === 'en' ? 'Install App / Add Shortcut' : 'অ্যাপ ইনস্টল / শর্টকাট যোগ'}
+                  </>
+                )}
               </h3>
               <button 
                 type="button"
@@ -523,6 +555,104 @@ export default function App() {
                     </li>
                   ))}
                 </ul>
+              )}
+
+              {activeModal === 'install' && (
+                <div className="space-y-5 text-slate-300">
+                  <p className="font-semibold text-slate-200">
+                    {lang === 'en'
+                      ? 'Add WalletLedger Hub to your desktop or mobile home screen to access it instantly like a native app.'
+                      : 'সহজে ব্যবহার করতে WalletLedger Hub-কে আপনার ডেক্সটপ বা মোবাইলের হোম স্ক্রিনে শর্টকাট হিসেবে যুক্ত করুন।'}
+                  </p>
+
+                  {/* Option 1: PWA Install (Supported by Chrome/Edge/Android) */}
+                  {deferredPrompt ? (
+                    <div className="p-4 rounded-xl bg-indigo-500/5 border border-indigo-500/10 flex flex-col gap-3">
+                      <h4 className="text-xs font-extrabold text-indigo-400 flex items-center gap-1.5 uppercase">
+                        <Download className="w-4 h-4" />
+                        {lang === 'en' ? 'Direct Installation' : 'সরাসরি ইনস্টলেশন'}
+                      </h4>
+                      <p className="text-[11px] leading-relaxed text-slate-400">
+                        {lang === 'en'
+                          ? 'Your browser supports direct installation. Click below to install it instantly.'
+                          : 'আপনার ব্রাউজারে সরাসরি ইনস্টল করার সুবিধা রয়েছে। নিচের বাটনে ক্লিক করে ইনস্টল করুন।'}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          deferredPrompt.prompt();
+                          const { outcome } = await deferredPrompt.userChoice;
+                          console.log(`User response to install prompt: ${outcome}`);
+                          setDeferredPrompt(null);
+                          setActiveModal(null);
+                        }}
+                        className="px-4 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-colors cursor-pointer border-0 w-full sm:w-auto self-start"
+                      >
+                        {lang === 'en' ? 'Install Application' : 'অ্যাপ্লিকেশন ইনস্টল করুন'}
+                      </button>
+                    </div>
+                  ) : null}
+
+                  {/* Option 2: Windows / Mac Desktop Shortcut Download */}
+                  <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800/80 flex flex-col gap-3">
+                    <h4 className="text-xs font-extrabold text-indigo-400 flex items-center gap-1.5 uppercase">
+                      <Monitor className="w-4 h-4" />
+                      {lang === 'en' ? 'Windows & Mac Desktop Shortcut' : 'উইন্ডোজ ও ম্যাক ডেক্সটপ শর্টকাট'}
+                    </h4>
+                    <p className="text-[11px] leading-relaxed text-slate-400">
+                      {lang === 'en'
+                        ? 'Download a shortcut file. Double-clicking it will instantly open the ledger in your web browser.'
+                        : 'ডেক্সটপ শর্টকাট ফাইল ডাউনলোড করুন। এটি ডাবল-ক্লিক করলেই সরাসরি আপনার লেজার ওপেন হবে।'}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const urlContent = `[InternetShortcut]\r\nURL=https://Reazul94.github.io/expense-loan-ledger/\r\n`;
+                        const blob = new Blob([urlContent], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = 'WalletLedger_Hub.url';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                        setActiveModal(null);
+                      }}
+                      className="px-4 py-2 text-xs font-bold bg-indigo-900/60 hover:bg-indigo-900 text-slate-200 border border-indigo-500/20 rounded-lg transition-colors cursor-pointer w-full sm:w-auto self-start flex items-center gap-1.5"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      {lang === 'en' ? 'Download Desktop Shortcut' : 'ডেক্সটপ শর্টকাট ডাউনলোড'}
+                    </button>
+                  </div>
+
+                  {/* Option 3: Mobile Home Screen Steps */}
+                  <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800/80 flex flex-col gap-3">
+                    <h4 className="text-xs font-extrabold text-indigo-400 flex items-center gap-1.5 uppercase">
+                      <Smartphone className="w-4 h-4" />
+                      {lang === 'en' ? 'Mobile Home Screen Guide' : 'মোবাইল হোম স্ক্রিন গাইড'}
+                    </h4>
+                    
+                    <div className="space-y-3.5 text-[11px] text-slate-400">
+                      <div>
+                        <span className="font-extrabold text-slate-200">Android (Chrome/Firefox):</span>
+                        <p className="leading-relaxed">
+                          {lang === 'en'
+                            ? 'Tap the three dots (menu) in top-right and select "Install App" or "Add to Home screen".'
+                            : 'ডানদিকের থ্রি-ডটস মেনু চেপে "Install App" বা "Add to Home screen" নির্বাচন করুন।'}
+                        </p>
+                      </div>
+                      <div className="border-t border-slate-800/30 pt-2.5">
+                        <span className="font-extrabold text-slate-200">iOS iPhone/iPad (Safari):</span>
+                        <p className="leading-relaxed">
+                          {lang === 'en'
+                            ? 'Tap the "Share" button at the bottom of Safari, scroll down, and select "Add to Home Screen".'
+                            : 'সাফারির নিচে থাকা "Share" বাটনটি আলতো চাপুন এবং নিচে স্ক্রল করে "Add to Home Screen" নির্বাচন করুন।'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
 
