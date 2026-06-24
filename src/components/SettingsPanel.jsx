@@ -6,10 +6,12 @@ import {
   FileSpreadsheet, 
   FileJson,
   ShieldCheck,
-  AlertOctagon
+  AlertOctagon,
+  X,
+  BookOpen
 } from 'lucide-react';
 
-export default function SettingsPanel({ expenses, loans, onResetAll, currentMonth, lang, t }) {
+export default function SettingsPanel({ expenses, loans, onResetAll, currentMonth, lang, t, onOpenStorageGuide }) {
   const [resetConfirm, setResetConfirm] = useState(false);
   const [resetTimeoutId, setResetTimeoutId] = useState(null);
 
@@ -98,7 +100,17 @@ export default function SettingsPanel({ expenses, loans, onResetAll, currentMont
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Storage Guide */}
+        <button
+          type="button"
+          onClick={onOpenStorageGuide}
+          className="flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl border border-indigo-500/20 bg-indigo-500/5 hover:bg-indigo-500/10 text-indigo-400 font-semibold text-xs transition-all active:scale-[0.98]"
+        >
+          <BookOpen className="w-4.5 h-4.5" />
+          {t.storageGuide}
+        </button>
+
         {/* CSV Export */}
         <button
           onClick={handleExportCSV}

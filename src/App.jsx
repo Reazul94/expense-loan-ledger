@@ -17,7 +17,11 @@ import {
   Sun,
   Moon,
   Palette,
-  Check
+  Check,
+  ShieldCheck,
+  FileText,
+  BookOpen,
+  X
 } from 'lucide-react';
 
 export default function App() {
@@ -48,6 +52,8 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState('expenses'); // 'expenses' or 'loans'
   const [toasts, setToasts] = useState([]);
+  const [activeModal, setActiveModal] = useState(null); // 'terms' | 'privacy' | 'storage' | null
+
 
   // Get active translation dictionary
   const t = translations[lang] || translations.en;
@@ -349,24 +355,145 @@ export default function App() {
           currentMonth={currentMonth}
           lang={lang}
           t={t}
+          onOpenStorageGuide={() => setActiveModal('storage')}
         />
 
       </main>
 
       {/* Premium footer */}
-      <footer className="w-full bg-slate-950 border-t border-slate-900 py-6 text-center text-[10px] text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-indigo-500" />
-            © {new Date().getFullYear()} WalletLedger Hub.
-          </p>
-          <p>
+      <footer className="w-full bg-slate-950 border-t border-slate-900 py-6 text-[10px] text-slate-500">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-center sm:text-left">
+            <p className="flex items-center gap-1 text-slate-400 font-medium justify-center sm:justify-start">
+              <Sparkles className="w-3 h-3 text-indigo-500" />
+              © {new Date().getFullYear()} WalletLedger Hub. {t.copyright}
+            </p>
+            <div className="flex items-center gap-3 justify-center">
+              <button 
+                type="button" 
+                onClick={() => setActiveModal('terms')} 
+                className="hover:text-indigo-400 transition-colors underline cursor-pointer bg-transparent border-0 p-0 text-[10px] text-slate-500 font-semibold"
+              >
+                {t.terms}
+              </button>
+              <span className="text-slate-800">|</span>
+              <button 
+                type="button" 
+                onClick={() => setActiveModal('privacy')} 
+                className="hover:text-indigo-400 transition-colors underline cursor-pointer bg-transparent border-0 p-0 text-[10px] text-slate-500 font-semibold"
+              >
+                {t.privacy}
+              </button>
+              <span className="text-slate-800">|</span>
+              <button 
+                type="button" 
+                onClick={() => setActiveModal('storage')} 
+                className="hover:text-indigo-400 transition-colors underline cursor-pointer bg-transparent border-0 p-0 text-[10px] text-slate-500 font-semibold flex items-center gap-1"
+              >
+                {t.storageGuide}
+              </button>
+            </div>
+          </div>
+          <p className="text-slate-600 font-medium">
             {lang === 'en' 
               ? 'Engineered with React, Tailwind CSS and LocalStorage'
               : 'সফলভাবে তৈরি করা হয়েছে React, Tailwind CSS এবং LocalStorage ব্যবহার করে'}
           </p>
         </div>
       </footer>
+
+      {/* Modal Overlays for Legal & Guide */}
+      {activeModal && (
+        <div 
+          className="fixed inset-0 bg-slate-950/65 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn"
+          onClick={() => setActiveModal(null)}
+        >
+          <div 
+            className="rounded-2xl p-6 max-w-lg w-full shadow-2xl relative space-y-4 max-h-[85vh] flex flex-col panel-container border border-slate-800/80 animate-scaleUp text-left"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex justify-between items-center border-b border-slate-800/40 pb-3">
+              <h3 className="text-sm font-bold text-slate-200 flex items-center gap-2 uppercase tracking-wider">
+                {activeModal === 'terms' && (
+                  <>
+                    <FileText className="w-4.5 h-4.5 text-indigo-400" />
+                    {t.termsTitle}
+                  </>
+                )}
+                {activeModal === 'privacy' && (
+                  <>
+                    <ShieldCheck className="w-4.5 h-4.5 text-emerald-400" />
+                    {t.privacyTitle}
+                  </>
+                )}
+                {activeModal === 'storage' && (
+                  <>
+                    <BookOpen className="w-4.5 h-4.5 text-sky-400" />
+                    {t.storageGuideTitle}
+                  </>
+                )}
+              </h3>
+              <button 
+                type="button"
+                onClick={() => setActiveModal(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-all cursor-pointer bg-transparent border-0"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            {/* Content */}
+            <div className="overflow-y-auto pr-1 flex-1 text-slate-300 text-xs space-y-4 max-h-[55vh]">
+              {activeModal === 'storage' && (
+                <>
+                  <p className="font-medium text-slate-200 leading-relaxed">
+                    {t.storageGuideDesc}
+                  </p>
+                  <ul className="list-decimal list-inside space-y-3.5 pl-1.5">
+                    {(t.storageGuideSteps || []).map((step, idx) => (
+                      <li key={idx} className="leading-relaxed break-words whitespace-normal">
+                        <span className="text-slate-300">{step}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {activeModal === 'terms' && (
+                <ul className="list-disc list-inside space-y-3.5 pl-1.5">
+                  {(t.termsList || []).map((step, idx) => (
+                    <li key={idx} className="leading-relaxed break-words whitespace-normal">
+                      <span className="text-slate-300">{step}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {activeModal === 'privacy' && (
+                <ul className="list-disc list-inside space-y-3.5 pl-1.5">
+                  {(t.privacyList || []).map((step, idx) => (
+                    <li key={idx} className="leading-relaxed break-words whitespace-normal">
+                      <span className="text-slate-300">{step}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {/* Footer button */}
+            <div className="flex justify-end pt-3 border-t border-slate-800/40">
+              <button
+                type="button"
+                onClick={() => setActiveModal(null)}
+                className="px-4 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg transition-colors cursor-pointer border-0"
+              >
+                {t.close}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Floating Toast notifications container */}
       <div className="fixed bottom-5 right-5 flex flex-col gap-2.5 z-50 pointer-events-none">
@@ -380,6 +507,7 @@ export default function App() {
           </div>
         ))}
       </div>
+
 
     </div>
   );

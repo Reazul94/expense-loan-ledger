@@ -69,7 +69,36 @@ export const translations = {
     toastSuccessEdit: "Entry successfully updated!",
     toastSuccessDelete: "Entry deleted successfully!",
     toastReset: "Database has been reset completely.",
-    currency: "$"
+    currency: "$",
+    // Legal & Guide
+    terms: "Terms & Conditions",
+    privacy: "Privacy Policy",
+    storageGuide: "Storage Guide",
+    copyright: "All Rights Reserved.",
+    close: "Close",
+    storageGuideTitle: "Local Storage Instructions",
+    storageGuideDesc: "This application runs 100% locally on your device. Here is how your data is handled:",
+    storageGuideSteps: [
+      "Auto-Save: Every transaction you add, edit, or delete is instantly saved into your browser's localStorage.",
+      "Privacy First: Your data is never uploaded to any cloud server or database. It remains private to your device.",
+      "Exporting Backups: Use 'Export All Data' (JSON) to save a backup file to your computer.",
+      "Data Safety Warning: Clearing your browser history, cache, or cookies will erase your data. Always keep a JSON backup before clearing browser data.",
+      "Moving Devices: To transfer data to another computer or phone, export the JSON file and import it on the new device."
+    ],
+    termsTitle: "Terms & Conditions",
+    termsList: [
+      "WalletLedger Hub is a free, local client-side utility provided 'as-is' without warranties of any kind.",
+      "No Data Retention: We do not store, host, or back up any of your records on external servers.",
+      "Loss of Records: The developers are not liable for any data loss caused by browser cleaning, cookie deletions, disk failure, or cache resets.",
+      "Permitted Use: You are free to use, copy, modify, and share this application for personal finance tracking purposes."
+    ],
+    privacyTitle: "Privacy & Data Policy",
+    privacyList: [
+      "No Analytics: We do not use cookies, tracking scripts, or advertisement networks.",
+      "No Server Communication: The application works entirely offline once loaded. Your financial entries never leave your device.",
+      "Local Storage Only: The only technology used to persist your data is your local browser's localStorage.",
+      "Zero Collection: We collect zero personal data, email addresses, names, or financial statistics."
+    ]
   },
   bn: {
     title: "ব্যক্তিগত মাসিক ব্যয় ও ঋণ লেনদেন হাব",
@@ -79,7 +108,7 @@ export const translations = {
     totalExpenses: "মোট খরচ",
     netSavings: "নেট সঞ্চয়",
     savingsRate: "সঞ্চয় হার",
-    activeLoans: "সক্রিয় ঋণসমূহ",
+    activeLoans: "সক্রিয় ঋণসমূহ",
     borrowed: "দেনা (ঋণ নিয়েছি)",
     lent: "পাওনা (ঋণ দিয়েছি)",
     netBalance: "নেট ঋণ ব্যালেন্স",
@@ -141,7 +170,36 @@ export const translations = {
     toastSuccessEdit: "সফলভাবে সংশোধন করা হয়েছে!",
     toastSuccessDelete: "সফলভাবে মুছে ফেলা হয়েছে!",
     toastReset: "ডাটাবেজ সম্পূর্ণ রিসেট করা হয়েছে।",
-    currency: "৳"
+    currency: "৳",
+    // Legal & Guide
+    terms: "শর্তাবলী ও নীতিমালা",
+    privacy: "গোপনীয়তা নীতি",
+    storageGuide: "স্টোরেজ গাইড",
+    copyright: "সর্বস্বত্ব সংরক্ষিত।",
+    close: "বন্ধ করুন",
+    storageGuideTitle: "লোকাল স্টোরেজ গাইড",
+    storageGuideDesc: "এই অ্যাপ্লিকেশনটি আপনার ডিভাইসে ১০০% লোকালভাবে কাজ করে। ডাটা স্টোরেজ সংক্রান্ত তথ্যসমূহ নিচে দেওয়া হলো:",
+    storageGuideSteps: [
+      "অটো-সেভ: খরচ বা ঋণের প্রতিটি এন্ট্রি আপনার ব্রাউজারের localStorage-এ স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়।",
+      "শতভাগ গোপনীয়তা: আপনার কোনো ডাটা ক্লাউড সার্ভারে বা ইন্টারনেটে পাঠানো হয় না। এটি আপনার ডিভাইসেই থাকে।",
+      "ব্যাকআপ ডাউনলোড: আপনার সমস্ত তথ্য কম্পিউটারে ব্যাকআপ রাখতে 'সব ডাটা ডাউনলোড (JSON)' বাটন ব্যবহার করুন।",
+      "ডাটা হারানোর সতর্কতা: ব্রাউজার ক্যাশ বা কুকিজ মুছে ফেললে আপনার জমানো হিসাব মুছে যাবে। তাই ক্যাশ মুছার আগে JSON ফাইল ব্যাকআপ রাখুন।",
+      "ডিভাইস পরিবর্তন: অন্য ফোন বা কম্পিউটারে হিসাব স্থানান্তর করতে প্রথমে JSON ব্যাকআপ ফাইলটি ডাউনলোড করুন এবং নতুন ডিভাইসে ইম্পোর্ট করুন।"
+    ],
+    termsTitle: "ব্যবহারের শর্তাবলী",
+    termsList: [
+      "WalletLedger Hub একটি সম্পূর্ণ বিনামূল্যে ব্যবহারের জন্য লোকাল ট্র্যাকার অ্যাপ। এটি 'যেমন আছে' (As-is) ভিত্তিতে প্রদান করা হয়েছে।",
+      "ডাটা স্টোরেজ দায়মুক্তি: আমরা কোনো এক্সটার্নাল সার্ভারে আপনার তথ্য সংরক্ষণ বা ব্যাকআপ রাখি না।",
+      "হিসাব মুছে যাওয়া: ব্রাউজার রিসেট, কুকি মুছে ফেলা, কিংবা হার্ডডিস্ক নষ্ট হওয়ার কারণে ডাটা হারিয়ে গেলে ডেভেলপার দায়ী থাকবে না।",
+      "উন্মুক্ত ব্যবহার: ব্যক্তিগত হিসাব সংরক্ষণের জন্য আপনি এই অ্যাপ্লিকেশনটি যেকোনোভাবে ব্যবহার, পরিবর্তন ও শেয়ার করতে পারবেন।"
+    ],
+    privacyTitle: "গোপনীয়তা এবং ডাটা পলিসি",
+    privacyList: [
+      "অ্যানালিটিক্স মুক্ত: আমরা আপনার ব্রাউজিং ট্র্যাক করার জন্য কোনো কুকিজ বা গুগল অ্যানালিটিক্স ব্যবহার করি না।",
+      "অফলাইন ব্যবহার: অ্যাপ্লিকেশনটি একবার লোড হওয়ার পর সম্পূর্ণ অফলাইনে কাজ করে। আপনার কোনো ডাটা এই ডিভাইস থেকে বাইরে যায় না।",
+      "লোকাল স্টোরেজ: তথ্য জমিয়ে রাখতে শুধুমাত্র আপনার ব্রাউজারের লোকাল স্টোরেজ (localStorage) প্রযুক্তি ব্যবহার করা হয়েছে।",
+      "তথ্য সংগ্রহহীনতা: আমরা কোনো ইমেইল ঠিকানা, নাম বা আর্থিক পরিসংখ্যান সংগ্রহ করি না।"
+    ]
   }
 };
 
