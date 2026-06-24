@@ -183,7 +183,7 @@ export default function App() {
 
       {/* Main Premium Navbar */}
       <header className="w-full border-b backdrop-blur-md sticky top-0 z-40 panel-container">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-3 md:h-16 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
           
           {/* Logo / Title */}
           <div className="flex items-center gap-2.5">
@@ -191,7 +191,7 @@ export default function App() {
               <Wallet className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-sm font-extrabold tracking-tight bg-gradient-to-r from-indigo-200 via-slate-100 to-purple-200 bg-clip-text text-transparent">
+              <h1 className="text-xs sm:text-sm font-extrabold tracking-tight bg-gradient-to-r from-indigo-200 via-slate-100 to-purple-200 bg-clip-text text-transparent">
                 {t.title}
               </h1>
               <p className="text-[10px] text-slate-400 font-medium">

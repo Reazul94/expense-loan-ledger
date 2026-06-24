@@ -358,8 +358,8 @@ export default function LoanManager({
         </div>
       </div>
 
-      {/* Loans Table */}
-      <div className="glass-card rounded-xl border border-slate-800/80 overflow-hidden">
+      {/* Loans Table - Desktop View */}
+      <div className="hidden md:block glass-card rounded-xl border border-slate-800/80 overflow-hidden animate-fadeIn">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
@@ -383,85 +383,24 @@ export default function LoanManager({
               ) : (
                 filteredLoans.map(item => (
                   <tr key={item.id} className="hover:bg-slate-900/30 transition-colors group">
-                    {/* Name */}
-                    <td className="px-4 py-3.5 font-semibold text-slate-100">
-                      {item.friendName}
-                    </td>
-                    
-                    {/* Type Badge */}
+                    <td className="px-4 py-3.5 font-semibold text-slate-100">{item.friendName}</td>
                     <td className="px-4 py-3.5">
-                      <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] uppercase border ${
-                        item.type === 'Lent' 
-                          ? 'border-emerald-500/20 text-emerald-400 bg-emerald-500/10' 
-                          : 'border-rose-500/20 text-rose-400 bg-rose-500/10'
-                      }`}>
+                      <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] uppercase border ${item.type === 'Lent' ? 'border-emerald-500/20 text-emerald-400 bg-emerald-500/10' : 'border-rose-500/20 text-rose-400 bg-rose-500/10'}`}>
                         {item.type === 'Lent' ? (lang === 'en' ? 'Lent' : 'পাওনা') : (lang === 'en' ? 'Borrowed' : 'দেনা')}
                       </span>
                     </td>
-
-                    {/* Amount */}
-                    <td className="px-4 py-3.5 font-bold text-slate-100">
-                      {formatCurrency(item.amount)}
-                    </td>
-
-                    {/* Date */}
-                    <td className="px-4 py-3.5 text-slate-400">
-                      {formatDate(item.date)}
-                    </td>
-
-                    {/* Repayment Date */}
-                    <td className="px-4 py-3.5 text-slate-400">
-                      {formatDate(item.repaymentDate)}
-                    </td>
-
-                    {/* Quick status toggle */}
+                    <td className="px-4 py-3.5 font-bold text-slate-100">{formatCurrency(item.amount)}</td>
+                    <td className="px-4 py-3.5 text-slate-400">{formatDate(item.date)}</td>
+                    <td className="px-4 py-3.5 text-slate-400">{formatDate(item.repaymentDate)}</td>
                     <td className="px-4 py-3.5 text-center">
-                      <button
-                        onClick={() => handleToggleStatus(item)}
-                        className={`mx-auto flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-extrabold uppercase transition-all ${
-                          item.status === 'Settled'
-                            ? 'border-emerald-500/35 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20'
-                            : item.type === 'Borrowed'
-                              ? 'border-rose-500/35 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 shadow-md shadow-rose-500/5'
-                              : 'border-amber-500/35 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 shadow-md shadow-amber-500/5'
-                        }`}
-                      >
-                        {item.status === 'Settled' ? (
-                          <>
-                            <CheckCircle2 className="w-3 h-3" />
-                            {t.settled}
-                          </>
-                        ) : item.type === 'Borrowed' ? (
-                          <>
-                            <ArrowDownLeft className="w-3.5 h-3.5 text-rose-400 animate-pulse" />
-                            {t.payLoanAction}
-                          </>
-                        ) : (
-                          <>
-                            <ArrowUpRight className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-                            {t.settleLoanAction}
-                          </>
-                        )}
+                      <button onClick={() => handleToggleStatus(item)} className={`mx-auto flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-extrabold uppercase transition-all ${item.status === 'Settled' ? 'border-emerald-500/35 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20' : item.type === 'Borrowed' ? 'border-rose-500/35 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 shadow-md shadow-rose-500/5' : 'border-amber-500/35 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 shadow-md shadow-amber-500/5'}`}>
+                        {item.status === 'Settled' ? <><CheckCircle2 className="w-3 h-3" /> {t.settled}</> : item.type === 'Borrowed' ? <><ArrowDownLeft className="w-3.5 h-3.5 text-rose-400 animate-pulse" /> {t.payLoanAction}</> : <><ArrowUpRight className="w-3.5 h-3.5 text-amber-400 animate-pulse" /> {t.settleLoanAction}</>}
                       </button>
                     </td>
-
-                    {/* Actions */}
                     <td className="px-4 py-3.5 text-right">
                       <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => handleStartEdit(item)}
-                          className="p-1 rounded text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors"
-                          title={t.editLoan}
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => onDeleteLoan(item.id)}
-                          className="p-1 rounded text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
-                          title={t.delete}
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        <button onClick={() => handleStartEdit(item)} className="p-1 rounded text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors" title={t.editLoan}><Edit3 className="w-3.5 h-3.5" /></button>
+                        <button onClick={() => onDeleteLoan(item.id)} className="p-1 rounded text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors" title={t.delete}><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>
                     </td>
                   </tr>
@@ -470,6 +409,48 @@ export default function LoanManager({
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Loans Mobile Card List View */}
+      <div className="md:hidden space-y-4 animate-fadeIn">
+        {filteredLoans.length === 0 ? (
+          <div className="glass-card rounded-xl p-8 border border-slate-800/60 text-center text-slate-400 text-xs">
+            {t.noLoans}
+          </div>
+        ) : (
+          filteredLoans.map(item => (
+            <div key={item.id} className="glass-card rounded-xl p-4 border border-slate-800/80 flex flex-col gap-3 relative overflow-hidden">
+              <div className="flex justify-between items-start gap-2">
+                <div>
+                  <h4 className="font-semibold text-slate-100 text-xs">{item.friendName}</h4>
+                  <span className={`inline-block px-2 py-0.5 mt-1.5 rounded-full font-bold text-[9px] uppercase border ${item.type === 'Lent' ? 'border-emerald-500/20 text-emerald-400 bg-emerald-500/10' : 'border-rose-500/20 text-rose-400 bg-rose-500/10'}`}>
+                    {item.type === 'Lent' ? (lang === 'en' ? 'Lent' : 'পাওনা') : (lang === 'en' ? 'Borrowed' : 'দেনা')}
+                  </span>
+                </div>
+                <span className="font-bold text-slate-100 text-sm">{formatCurrency(item.amount)}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-400 border-t border-b border-slate-800/30 py-2">
+                <div>
+                  <span className="block text-slate-500 font-semibold mb-0.5">{t.date}</span>
+                  <span>{formatDate(item.date)}</span>
+                </div>
+                <div>
+                  <span className="block text-slate-500 font-semibold mb-0.5">{t.expectedRepayment}</span>
+                  <span>{formatDate(item.repaymentDate)}</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center mt-1">
+                <button onClick={() => handleToggleStatus(item)} className={`flex items-center justify-center gap-1.5 px-3 py-1 rounded-full border text-[9px] font-extrabold uppercase transition-all ${item.status === 'Settled' ? 'border-emerald-500/35 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20' : item.type === 'Borrowed' ? 'border-rose-500/35 text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 shadow-md shadow-rose-500/5' : 'border-amber-500/35 text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 shadow-md shadow-amber-500/5'}`}>
+                  {item.status === 'Settled' ? <><CheckCircle2 className="w-3 h-3" /> {t.settled}</> : item.type === 'Borrowed' ? <><ArrowDownLeft className="w-3 h-3 text-rose-400 animate-pulse" /> {t.payLoanAction}</> : <><ArrowUpRight className="w-3 h-3 text-amber-400 animate-pulse" /> {t.settleLoanAction}</>}
+                </button>
+                <div className="flex gap-2">
+                  <button onClick={() => handleStartEdit(item)} className="p-1.5 rounded bg-slate-800/40 text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors" title={t.editLoan}><Edit3 className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => onDeleteLoan(item.id)} className="p-1.5 rounded bg-slate-800/40 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors" title={t.delete}><Trash2 className="w-3.5 h-3.5" /></button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
     </div>
