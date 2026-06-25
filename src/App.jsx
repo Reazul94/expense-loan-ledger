@@ -69,6 +69,14 @@ export default function App() {
     return saved ? JSON.parse(saved) : false;
   });
   const [currentView, setCurrentView] = useState('main'); // 'main' | 'quran'
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
@@ -496,6 +504,20 @@ export default function App() {
               </p>
             </div>
           </div>
+
+          {/* User & Live Clock Info */}
+          {currentUser && (
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2.5 text-center sm:text-left text-[10px] font-extrabold tracking-wide text-slate-400 bg-slate-950/20 border border-slate-800/40 rounded-xl px-3 py-1.5 md:py-2">
+              <div className="flex items-center justify-center sm:justify-start gap-1.5 text-indigo-400 uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                <span>{lang === 'en' ? 'User:' : 'ব্যবহারকারী:'} <span className="text-slate-100 font-black">{currentUser.name}</span></span>
+              </div>
+              <span className="hidden sm:inline text-slate-800 font-normal">|</span>
+              <div className="text-slate-300 font-mono tracking-tight select-all">
+                {currentDateTime.toLocaleString(lang === 'bn' ? 'bn-BD' : 'en-US', { dateStyle: 'medium', timeStyle: 'medium' })}
+              </div>
+            </div>
+          )}
 
           {/* Controls: Theme & Language Switchers */}
           <div className="flex items-center gap-3">
