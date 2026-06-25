@@ -34,7 +34,27 @@ export default function QuranReader({ lang, t, onClose }) {
   const [playingAyahId, setPlayingAyahId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [continuousPlay, setContinuousPlay] = useState(true);
+  const [currentQueueType, setCurrentQueueType] = useState(null); // 'auzubillah' | 'bismillah' | 'ayah'
+
   const audioRef = useRef(null);
+  const queueRef = useRef([]);
+  const queueIndexRef = useRef(-1);
+  const selectedSurahRef = useRef(selectedSurah);
+  const versesRef = useRef(verses);
+  const continuousPlayRef = useRef(continuousPlay);
+
+  // Sync refs with state to prevent stale closure issues in audio listeners
+  useEffect(() => {
+    selectedSurahRef.current = selectedSurah;
+  }, [selectedSurah]);
+
+  useEffect(() => {
+    versesRef.current = verses;
+  }, [verses]);
+
+  useEffect(() => {
+    continuousPlayRef.current = continuousPlay;
+  }, [continuousPlay]);
 
   // Scroll active playing Ayah into view
   useEffect(() => {
@@ -49,6 +69,59 @@ export default function QuranReader({ lang, t, onClose }) {
     }
   }, [playingAyahId, isPlaying]);
 
+  const playQueueItem = (index) => {
+    if (!audioRef.current || index < 0 || index >= queueRef.current.length) return;
+
+    const item = queueRef.current[index];
+    queueIndexRef.current = index;
+
+    // Update state for UI
+    setCurrentQueueType(item.type);
+    setPlayingAyahId(item.ayahId);
+
+    // Play audio
+    audioRef.current.src = item.url;
+    audioRef.current.load();
+    audioRef.current.play().catch(err => {
+      console.error("Audio playback error:", err);
+    });
+    setIsPlaying(true);
+  };
+
+  const playAudio = (ayahNumber, skipIntro = false) => {
+    if (!audioRef.current) return;
+
+    // Build the queue
+    const queue = [];
+    if (!skipIntro) {
+      // 1. Aujubillah
+      queue.push({
+        type: 'auzubillah',
+        url: 'https://everyayah.com/data/Alafasy_128kbps/audhubillah.mp3',
+        ayahId: ayahNumber
+      });
+      // 2. Bismillah (except for Surah 9)
+      if (selectedSurahRef.current && selectedSurahRef.current.number !== 9) {
+        queue.push({
+          type: 'bismillah',
+          url: 'https://cdn.islamic.network/quran/audio/128/ar.alafasy/1.mp3',
+          ayahId: ayahNumber
+        });
+      }
+    }
+    // 3. The target Ayah
+    queue.push({
+      type: 'ayah',
+      url: `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayahNumber}.mp3`,
+      ayahId: ayahNumber
+    });
+
+    queueRef.current = queue;
+    queueIndexRef.current = 0;
+
+    playQueueItem(0);
+  };
+
   // Initialize Audio player
   useEffect(() => {
     audioRef.current = new Audio();
@@ -57,21 +130,38 @@ export default function QuranReader({ lang, t, onClose }) {
     const handlePause = () => setIsPlaying(false);
     const handleEnded = () => {
       setIsPlaying(false);
-      if (continuousPlay) {
-        setPlayingAyahId((prevId) => {
-          if (!prevId) return null;
-          const currentIndex = verses.findIndex(v => v.number === prevId);
-          if (currentIndex !== -1 && currentIndex + 1 < verses.length) {
-            const nextVerse = verses[currentIndex + 1];
-            setTimeout(() => {
-              playAudio(nextVerse.number);
-            }, 600);
-            return nextVerse.number;
-          }
-          return null;
-        });
+      const nextIndex = queueIndexRef.current + 1;
+      if (nextIndex < queueRef.current.length) {
+        // Play next item in queue
+        setTimeout(() => {
+          playQueueItem(nextIndex);
+        }, 600);
       } else {
-        setPlayingAyahId(null);
+        // Queue finished. If continuous play is enabled, find the next Ayah
+        if (continuousPlayRef.current) {
+          const lastItem = queueRef.current[queueRef.current.length - 1];
+          if (lastItem && lastItem.type === 'ayah') {
+            const currentAyahId = lastItem.ayahId;
+            const currentIndex = versesRef.current.findIndex(v => v.number === currentAyahId);
+            if (currentIndex !== -1 && currentIndex + 1 < versesRef.current.length) {
+              const nextVerse = versesRef.current[currentIndex + 1];
+              setTimeout(() => {
+                // Play next verse, skipping the Aujubillah and Bismillah intro
+                playAudio(nextVerse.number, true);
+              }, 600);
+            } else {
+              // End of Surah
+              setPlayingAyahId(null);
+              setCurrentQueueType(null);
+            }
+          } else {
+            setPlayingAyahId(null);
+            setCurrentQueueType(null);
+          }
+        } else {
+          setPlayingAyahId(null);
+          setCurrentQueueType(null);
+        }
       }
     };
 
@@ -87,19 +177,7 @@ export default function QuranReader({ lang, t, onClose }) {
         audioRef.current.removeEventListener('ended', handleEnded);
       }
     };
-  }, [verses, continuousPlay]);
-
-  const playAudio = (ayahNumber) => {
-    if (!audioRef.current) return;
-    const url = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayahNumber}.mp3`;
-    audioRef.current.src = url;
-    audioRef.current.load();
-    audioRef.current.play().catch(err => {
-      console.error("Audio playback error:", err);
-    });
-    setPlayingAyahId(ayahNumber);
-    setIsPlaying(true);
-  };
+  }, []);
 
   const handlePlayPause = (ayahNumber) => {
     if (!audioRef.current) return;
@@ -119,7 +197,10 @@ export default function QuranReader({ lang, t, onClose }) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
+    queueRef.current = [];
+    queueIndexRef.current = -1;
     setPlayingAyahId(null);
+    setCurrentQueueType(null);
     setIsPlaying(false);
   };
 
@@ -601,7 +682,12 @@ export default function QuranReader({ lang, t, onClose }) {
                     {lang === 'en' ? 'Reciting Surah' : 'সূরা তেলাওয়াত'} {selectedSurah.englishName}
                   </span>
                   <p className="text-xs font-extrabold text-slate-100 truncate mt-0.5">
-                    {lang === 'en' ? 'Ayah' : 'আয়াত'} {getBnbDigits(verses.find(v => v.number === playingAyahId)?.numberInSurah || 1)}
+                    {currentQueueType === 'auzubillah' 
+                      ? (lang === 'en' ? "A'udhu Billah" : "আউযুবিল্লাহ")
+                      : currentQueueType === 'bismillah'
+                        ? (lang === 'en' ? "Bismillah" : "বিসমিল্লাহ")
+                        : `${lang === 'en' ? 'Ayah' : 'আয়াত'} ${getBnbDigits(verses.find(v => v.number === playingAyahId)?.numberInSurah || 1)}`
+                    }
                   </p>
                 </div>
               </div>
