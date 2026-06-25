@@ -383,7 +383,14 @@ export default function LoanManager({
               ) : (
                 filteredLoans.map(item => (
                   <tr key={item.id} className="hover:bg-slate-900/30 transition-colors group">
-                    <td className="px-4 py-3.5 font-semibold text-slate-100">{item.friendName}</td>
+                    <td className="px-4 py-3.5">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-[10px] font-black text-white uppercase shadow-md shadow-indigo-600/10 shrink-0">
+                          {item.friendName.charAt(0)}
+                        </div>
+                        <span className="font-semibold text-slate-100">{item.friendName}</span>
+                      </div>
+                    </td>
                     <td className="px-4 py-3.5">
                       <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] uppercase border ${item.type === 'Lent' ? 'border-emerald-500/20 text-emerald-400 bg-emerald-500/10' : 'border-rose-500/20 text-rose-400 bg-rose-500/10'}`}>
                         {item.type === 'Lent' ? (lang === 'en' ? 'Lent' : 'পাওনা') : (lang === 'en' ? 'Borrowed' : 'দেনা')}
@@ -421,13 +428,18 @@ export default function LoanManager({
           filteredLoans.map(item => (
             <div key={item.id} className="glass-card rounded-xl p-4 border border-slate-800/80 flex flex-col gap-3 relative overflow-hidden">
               <div className="flex justify-between items-start gap-2">
-                <div>
-                  <h4 className="font-semibold text-slate-100 text-xs">{item.friendName}</h4>
-                  <span className={`inline-block px-2 py-0.5 mt-1.5 rounded-full font-bold text-[9px] uppercase border ${item.type === 'Lent' ? 'border-emerald-500/20 text-emerald-400 bg-emerald-500/10' : 'border-rose-500/20 text-rose-400 bg-rose-500/10'}`}>
-                    {item.type === 'Lent' ? (lang === 'en' ? 'Lent' : 'পাওনা') : (lang === 'en' ? 'Borrowed' : 'দেনা')}
-                  </span>
+                <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-[10px] font-black text-white uppercase shadow-md shadow-indigo-600/10 shrink-0">
+                    {item.friendName.charAt(0)}
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-slate-100 text-xs truncate">{item.friendName}</h4>
+                    <span className={`inline-block px-2 py-0.5 mt-1 rounded-full font-bold text-[9px] uppercase border ${item.type === 'Lent' ? 'border-emerald-500/20 text-emerald-400 bg-emerald-500/10' : 'border-rose-500/20 text-rose-400 bg-rose-500/10'}`}>
+                      {item.type === 'Lent' ? (lang === 'en' ? 'Lent' : 'পাওনা') : (lang === 'en' ? 'Borrowed' : 'দেনা')}
+                    </span>
+                  </div>
                 </div>
-                <span className="font-bold text-slate-100 text-sm">{formatCurrency(item.amount)}</span>
+                <span className="font-bold text-slate-100 text-sm shrink-0">{formatCurrency(item.amount)}</span>
               </div>
               <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-400 border-t border-b border-slate-800/30 py-2">
                 <div>

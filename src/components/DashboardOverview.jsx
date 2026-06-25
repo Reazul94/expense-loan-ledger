@@ -64,40 +64,44 @@ export default function DashboardOverview({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         
         {/* Income Card (Editable) */}
-        <div className="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between h-32 border border-indigo-500/20 glow-indigo group">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold text-indigo-300 uppercase tracking-wider">{t.income}</span>
-            <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:scale-110 transition-transform">
-              <TrendingUp className="w-5 h-5" />
+        <div className="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between h-32 border border-slate-800/80 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-xl group">
+          {/* Subtle Glows */}
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 opacity-40 pointer-events-none" />
+          <div className="absolute -right-6 -bottom-6 w-20 h-20 rounded-full bg-indigo-500/10 blur-xl group-hover:bg-indigo-500/20 transition-all duration-500 pointer-events-none" />
+          
+          <div className="flex justify-between items-start relative z-10">
+            <span className="text-xs font-bold text-indigo-300/80 uppercase tracking-wider">{t.income}</span>
+            <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:scale-110 transition-transform duration-300">
+              <TrendingUp className="w-4 h-4" />
             </div>
           </div>
           
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-2 mt-2 relative z-10">
             {isEditing ? (
               <div className="flex items-center gap-1.5 w-full">
                 <input
                   type="number"
                   value={tempIncome}
                   onChange={(e) => setTempIncome(e.target.value)}
-                  className="w-full px-2 py-1 text-base font-bold border border-indigo-500 rounded focus:ring-1 focus:ring-indigo-500"
+                  className="w-full px-2 py-1 text-sm font-bold border border-indigo-500/30 rounded-lg focus:ring-1 focus:ring-indigo-500 bg-slate-950/40"
                   autoFocus
                   onKeyDown={(e) => { if (e.key === 'Enter') handleSave(); }}
                 />
                 <button 
                   onClick={handleSave}
-                  className="p-1.5 rounded bg-indigo-500 text-white hover:bg-indigo-600 transition-colors"
+                  className="p-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 transition-colors border-0 cursor-pointer"
                 >
-                  <Check className="w-4 h-4" />
+                  <Check className="w-3.5 h-3.5" />
                 </button>
               </div>
             ) : (
               <div className="flex items-center justify-between w-full">
-                <span className="text-xl font-bold text-slate-100 tracking-tight">
+                <span className="text-xl font-black bg-gradient-to-r from-indigo-200 via-slate-100 to-indigo-300 bg-clip-text text-transparent tracking-tight">
                   {formatCurrency(income)}
                 </span>
                 <button 
                   onClick={() => setIsEditing(true)}
-                  className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-indigo-400 hover:bg-slate-800/50 rounded transition-all"
+                  className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-slate-800/40 rounded-lg transition-all border-0 bg-transparent cursor-pointer"
                   title={t.setIncome}
                 >
                   <Edit2 className="w-3.5 h-3.5" />
@@ -108,66 +112,78 @@ export default function DashboardOverview({
         </div>
 
         {/* Expenses Card */}
-        <div className="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between h-32 border border-rose-500/10 glow-rose group">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold text-rose-300 uppercase tracking-wider">{t.totalExpenses}</span>
-            <div className="p-2 rounded-xl bg-rose-500/10 text-rose-400 group-hover:scale-110 transition-transform">
-              <TrendingDown className="w-5 h-5" />
+        <div className="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between h-32 border border-slate-800/80 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-xl group">
+          <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-red-500/5 opacity-40 pointer-events-none" />
+          <div className="absolute -right-6 -bottom-6 w-20 h-20 rounded-full bg-rose-500/10 blur-xl group-hover:bg-rose-500/20 transition-all duration-500 pointer-events-none" />
+
+          <div className="flex justify-between items-start relative z-10">
+            <span className="text-xs font-bold text-rose-300/80 uppercase tracking-wider">{t.totalExpenses}</span>
+            <div className="p-2 rounded-xl bg-rose-500/10 text-rose-400 group-hover:scale-110 transition-transform duration-300">
+              <TrendingDown className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-2">
-            <span className="text-xl font-bold text-slate-100 tracking-tight">
+          <div className="mt-2 relative z-10">
+            <span className="text-xl font-black bg-gradient-to-r from-rose-300 via-slate-100 to-rose-200 bg-clip-text text-transparent tracking-tight">
               {formatCurrency(totalExpenses)}
             </span>
           </div>
         </div>
 
         {/* Net Savings Card */}
-        <div className="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between h-32 border border-emerald-500/10 glow-emerald group">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">{t.netSavings}</span>
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform">
-              <PiggyBank className="w-5 h-5" />
+        <div className="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between h-32 border border-slate-800/80 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-xl group">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 opacity-40 pointer-events-none" />
+          <div className="absolute -right-6 -bottom-6 w-20 h-20 rounded-full bg-emerald-500/10 blur-xl group-hover:bg-emerald-500/20 transition-all duration-500 pointer-events-none" />
+
+          <div className="flex justify-between items-start relative z-10">
+            <span className="text-xs font-bold text-emerald-300/80 uppercase tracking-wider">{t.netSavings}</span>
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform duration-300">
+              <PiggyBank className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-2">
-            <span className={`text-xl font-bold tracking-tight ${netSavings >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+          <div className="mt-2 relative z-10">
+            <span className={`text-xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r ${netSavings >= 0 ? 'from-emerald-400 to-teal-300' : 'from-rose-500 to-red-400'}`}>
               {formatCurrency(netSavings)}
             </span>
           </div>
         </div>
 
         {/* Savings Rate Card */}
-        <div className="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between h-32 border border-sky-500/10 group">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold text-sky-300 uppercase tracking-wider">{t.savingsRate}</span>
-            <div className="p-2 rounded-xl bg-sky-500/10 text-sky-400 group-hover:scale-110 transition-transform">
-              <Percent className="w-5 h-5" />
+        <div className="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between h-32 border border-slate-800/80 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-xl group">
+          <div className="absolute inset-0 bg-gradient-to-br from-sky-500/5 to-blue-500/5 opacity-40 pointer-events-none" />
+          <div className="absolute -right-6 -bottom-6 w-20 h-20 rounded-full bg-sky-500/10 blur-xl group-hover:bg-sky-500/20 transition-all duration-500 pointer-events-none" />
+
+          <div className="flex justify-between items-start relative z-10">
+            <span className="text-xs font-bold text-sky-300/80 uppercase tracking-wider">{t.savingsRate}</span>
+            <div className="p-2 rounded-xl bg-sky-500/10 text-sky-400 group-hover:scale-110 transition-transform duration-300">
+              <Percent className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-2">
-            <span className={`text-xl font-bold tracking-tight ${savingsRate >= 20 ? 'text-emerald-400' : 'text-amber-400'}`}>
+          <div className="mt-2 relative z-10">
+            <span className={`text-xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r ${savingsRate >= 20 ? 'from-sky-400 to-teal-300' : 'from-amber-400 to-orange-400'}`}>
               {formatPercent(savingsRate)}
             </span>
           </div>
         </div>
 
         {/* Active Loans Card */}
-        <div className="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between h-32 border border-amber-500/10 group">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold text-amber-300 uppercase tracking-wider">{t.activeLoans}</span>
-            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 group-hover:scale-110 transition-transform">
-              <Scale className="w-5 h-5" />
+        <div className="glass-card rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between h-32 border border-slate-800/80 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-xl group">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-yellow-500/5 opacity-40 pointer-events-none" />
+          <div className="absolute -right-6 -bottom-6 w-20 h-20 rounded-full bg-amber-500/10 blur-xl group-hover:bg-amber-500/20 transition-all duration-500 pointer-events-none" />
+
+          <div className="flex justify-between items-start relative z-10">
+            <span className="text-xs font-bold text-amber-300/80 uppercase tracking-wider">{t.activeLoans}</span>
+            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 group-hover:scale-110 transition-transform duration-300">
+              <Scale className="w-4 h-4" />
             </div>
           </div>
-          <div className="mt-2 flex flex-col text-[11px] text-slate-400 space-y-0.5">
-            <div className="flex justify-between">
-              <span>{lang === 'en' ? 'Lent:' : 'পাওনা:'}</span>
-              <span className="font-semibold text-emerald-400">{formatCurrency(activeLent)}</span>
+          <div className="mt-2 flex flex-col text-[11px] text-slate-400 space-y-1 relative z-10">
+            <div className="flex justify-between items-center bg-slate-950/20 px-2 py-0.5 rounded border border-slate-800/20">
+              <span className="font-semibold text-slate-400">{lang === 'en' ? 'Lent:' : 'পাওনা:'}</span>
+              <span className="font-extrabold text-emerald-400">{formatCurrency(activeLent)}</span>
             </div>
-            <div className="flex justify-between">
-              <span>{lang === 'en' ? 'Borrowed:' : 'দেনা:'}</span>
-              <span className="font-semibold text-rose-400">{formatCurrency(activeBorrowed)}</span>
+            <div className="flex justify-between items-center bg-slate-950/20 px-2 py-0.5 rounded border border-slate-800/20">
+              <span className="font-semibold text-slate-400">{lang === 'en' ? 'Borrowed:' : 'দেনা:'}</span>
+              <span className="font-extrabold text-rose-400">{formatCurrency(activeBorrowed)}</span>
             </div>
           </div>
         </div>
