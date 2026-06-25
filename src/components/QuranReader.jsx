@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, 
   Search, 
@@ -12,7 +12,12 @@ import {
   RefreshCw,
   AlertCircle,
   ChevronsUp,
-  ChevronsDown
+  ChevronsDown,
+  Play,
+  Pause,
+  Volume2,
+  Square,
+  Repeat
 } from 'lucide-react';
 import { surahList } from '../utils/quranData';
 import { toBengaliDigits } from './LedgerSelector';
@@ -26,6 +31,97 @@ export default function QuranReader({ lang, t, onClose }) {
   const [showScrollUp, setShowScrollUp] = useState(false);
   const [showScrollDown, setShowScrollDown] = useState(true);
   const [verseSearchQuery, setVerseSearchQuery] = useState('');
+  const [playingAyahId, setPlayingAyahId] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [continuousPlay, setContinuousPlay] = useState(true);
+  const audioRef = useRef(null);
+
+  // Scroll active playing Ayah into view
+  useEffect(() => {
+    if (playingAyahId && isPlaying) {
+      const activeVerse = verses.find(v => v.number === playingAyahId);
+      if (activeVerse) {
+        const el = document.getElementById(`ayah-${activeVerse.numberInSurah}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }
+  }, [playingAyahId, isPlaying]);
+
+  // Initialize Audio player
+  useEffect(() => {
+    audioRef.current = new Audio();
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleEnded = () => {
+      setIsPlaying(false);
+      if (continuousPlay) {
+        setPlayingAyahId((prevId) => {
+          if (!prevId) return null;
+          const currentIndex = verses.findIndex(v => v.number === prevId);
+          if (currentIndex !== -1 && currentIndex + 1 < verses.length) {
+            const nextVerse = verses[currentIndex + 1];
+            setTimeout(() => {
+              playAudio(nextVerse.number);
+            }, 600);
+            return nextVerse.number;
+          }
+          return null;
+        });
+      } else {
+        setPlayingAyahId(null);
+      }
+    };
+
+    audioRef.current.addEventListener('play', handlePlay);
+    audioRef.current.addEventListener('pause', handlePause);
+    audioRef.current.addEventListener('ended', handleEnded);
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.removeEventListener('play', handlePlay);
+        audioRef.current.removeEventListener('pause', handlePause);
+        audioRef.current.removeEventListener('ended', handleEnded);
+      }
+    };
+  }, [verses, continuousPlay]);
+
+  const playAudio = (ayahNumber) => {
+    if (!audioRef.current) return;
+    const url = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayahNumber}.mp3`;
+    audioRef.current.src = url;
+    audioRef.current.load();
+    audioRef.current.play().catch(err => {
+      console.error("Audio playback error:", err);
+    });
+    setPlayingAyahId(ayahNumber);
+    setIsPlaying(true);
+  };
+
+  const handlePlayPause = (ayahNumber) => {
+    if (!audioRef.current) return;
+    if (playingAyahId === ayahNumber) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play().catch(err => console.error(err));
+      }
+    } else {
+      playAudio(ayahNumber);
+    }
+  };
+
+  const handleStopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setPlayingAyahId(null);
+    setIsPlaying(false);
+  };
 
   // Scroll to top when view changes
   useEffect(() => {
@@ -86,6 +182,7 @@ export default function QuranReader({ lang, t, onClose }) {
             }
           }
           return {
+            number: ayah.number,
             numberInSurah: ayah.numberInSurah,
             arabic: arabicText,
             bengali: bengaliAyahs[index].text,
@@ -127,6 +224,7 @@ export default function QuranReader({ lang, t, onClose }) {
   };
 
   const handleGoBackToList = () => {
+    handleStopAudio();
     setSelectedSurah(null);
     setVerses([]);
     setError(null);
@@ -181,7 +279,7 @@ export default function QuranReader({ lang, t, onClose }) {
           <div className="flex items-center gap-2.5">
             <button
               type="button"
-              onClick={selectedSurah ? handleGoBackToList : onClose}
+              onClick={selectedSurah ? handleGoBackToList : () => { handleStopAudio(); onClose(); }}
               className="p-2 rounded-xl text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-all border-0 bg-transparent cursor-pointer flex items-center justify-center"
               title={lang === 'en' ? 'Back' : 'পেছনে যান'}
             >
@@ -320,6 +418,27 @@ export default function QuranReader({ lang, t, onClose }) {
                   {getBnbDigits(selectedSurah.numberOfAyahs)} {lang === 'en' ? 'Ayahs' : 'আয়াত'}
                 </span>
               </div>
+              {verses.length > 0 && (
+                <div className="mt-5 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => handlePlayPause(verses[0].number)}
+                    className="flex items-center gap-2 px-5 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all active:scale-[0.98] cursor-pointer shadow-md glow-indigo border-0"
+                  >
+                    {playingAyahId && isPlaying ? (
+                      <>
+                        <Volume2 className="w-4 h-4 animate-pulse text-emerald-400" />
+                        <span>{lang === 'en' ? 'Playing Recitation' : 'তেলাওয়াত চলছে'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-4 h-4 fill-current" />
+                        <span>{lang === 'en' ? 'Play Surah (Mishary Alafasy)' : 'সূরা শুনুন (মিশারী আলাফাসী)'}</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Loading Spinner */}
@@ -403,13 +522,36 @@ export default function QuranReader({ lang, t, onClose }) {
                 {filteredVerses.map((v) => (
                   <div 
                     key={v.numberInSurah} 
-                    className="glass-card rounded-2xl p-5 border border-slate-800/80 flex flex-col gap-4 relative"
+                    id={`ayah-${v.numberInSurah}`}
+                    className={`glass-card rounded-2xl p-5 border transition-all duration-500 flex flex-col gap-4 relative ${
+                      v.number === playingAyahId 
+                        ? 'border-indigo-500/60 bg-indigo-600/5 shadow-lg shadow-indigo-500/5 glow-indigo-border'
+                        : 'border-slate-800/80'
+                    }`}
                   >
                     {/* Verse Header Badge */}
                     <div className="flex justify-between items-center">
                       <span className="text-[10px] font-black uppercase tracking-wider text-indigo-400 bg-indigo-600/10 border border-indigo-500/20 px-2.5 py-0.5 rounded-full">
                         {lang === 'en' ? 'Ayah' : 'আয়াত'} {getBnbDigits(v.numberInSurah)}
                       </span>
+                      
+                      {/* Individual Audio Recitation Button */}
+                      <button
+                        type="button"
+                        onClick={() => handlePlayPause(v.number)}
+                        className={`w-7 h-7 rounded-full flex items-center justify-center transition-all border cursor-pointer active:scale-90 ${
+                          v.number === playingAyahId
+                            ? 'bg-indigo-600/15 border-indigo-500/30 text-indigo-400 shadow-md'
+                            : 'bg-slate-900/40 border-slate-800 text-slate-500 hover:text-indigo-400 hover:border-indigo-500/20'
+                        }`}
+                        title={lang === 'en' ? 'Play Recitation' : 'তেলাওয়াত প্লে'}
+                      >
+                        {v.number === playingAyahId && isPlaying ? (
+                          <Pause className="w-3.5 h-3.5 fill-current animate-pulse" />
+                        ) : (
+                          <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                        )}
+                      </button>
                     </div>
 
                     {/* Arabic Verse text */}
@@ -443,6 +585,83 @@ export default function QuranReader({ lang, t, onClose }) {
         )}
 
       </main>
+
+      {/* Floating Audio Recitation Control Bar */}
+      {playingAyahId && (
+        <div className="fixed bottom-24 left-4 right-4 md:left-auto md:right-4 md:w-96 z-40 animate-slideUp">
+          <div className="rounded-2xl border border-indigo-500/30 bg-slate-900/95 backdrop-blur-md shadow-2xl p-4 flex flex-col gap-3 glow-indigo">
+            {/* Playing Info */}
+            <div className="flex items-center justify-between gap-3 text-left">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="p-2 rounded-xl bg-indigo-600/10 text-indigo-400 shrink-0">
+                  <Volume2 className="w-4.5 h-4.5 animate-pulse" />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[9px] font-black uppercase tracking-wider text-indigo-400">
+                    {lang === 'en' ? 'Reciting Surah' : 'সূরা তেলাওয়াত'} {selectedSurah.englishName}
+                  </span>
+                  <p className="text-xs font-extrabold text-slate-100 truncate mt-0.5">
+                    {lang === 'en' ? 'Ayah' : 'আয়াত'} {getBnbDigits(verses.find(v => v.number === playingAyahId)?.numberInSurah || 1)}
+                  </p>
+                </div>
+              </div>
+
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest bg-slate-950/40 px-2 py-0.5 rounded border border-slate-800 shrink-0">
+                {lang === 'en' ? 'ar.alafasy' : 'মিশারী আলাফাসী'}
+              </span>
+            </div>
+
+            {/* Progress Bar Status */}
+            <div className="w-full bg-slate-950/50 rounded-full h-1 overflow-hidden">
+              <div className={`h-full bg-indigo-500 rounded-full ${isPlaying ? 'w-full transition-all duration-[20s] linear' : 'w-1/2'}`}></div>
+            </div>
+
+            {/* Control Buttons */}
+            <div className="flex items-center justify-between gap-4 pt-1">
+              {/* Continuous Play Toggle */}
+              <button
+                type="button"
+                onClick={() => setContinuousPlay(!continuousPlay)}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-[10px] font-bold uppercase transition-all cursor-pointer ${
+                  continuousPlay
+                    ? 'bg-indigo-600/15 border-indigo-500/30 text-indigo-400'
+                    : 'bg-transparent border-slate-800 text-slate-500 hover:text-slate-300'
+                }`}
+                title={lang === 'en' ? 'Continuous Recitation' : 'অটো-নেক্সট প্লে'}
+              >
+                <Repeat className="w-3.5 h-3.5" />
+                <span>{lang === 'en' ? 'Auto-Next' : 'অটো-নেক্সট'}</span>
+              </button>
+
+              {/* Play/Pause & Stop Controls */}
+              <div className="flex items-center gap-2">
+                {/* Play/Pause Toggle */}
+                <button
+                  type="button"
+                  onClick={() => handlePlayPause(playingAyahId)}
+                  className="w-8 h-8 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center transition-all cursor-pointer border-0 active:scale-90"
+                >
+                  {isPlaying ? (
+                    <Pause className="w-4 h-4 fill-current" />
+                  ) : (
+                    <Play className="w-4 h-4 fill-current ml-0.5" />
+                  )}
+                </button>
+
+                {/* Stop */}
+                <button
+                  type="button"
+                  onClick={handleStopAudio}
+                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-all cursor-pointer border border-slate-700 active:scale-90"
+                  title={lang === 'en' ? 'Stop Recitation' : 'বন্ধ করুন'}
+                >
+                  <Square className="w-3.5 h-3.5 fill-current" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Floating scroll to top/bottom arrows */}
       {(showScrollUp || showScrollDown) && (
