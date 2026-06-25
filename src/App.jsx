@@ -848,6 +848,21 @@ export default function App() {
                     ))}
                   </ul>
                   
+                  {/* Cache Utilities Guide */}
+                  <h4 className="text-xs font-bold text-indigo-400 mt-5 mb-2.5 uppercase tracking-wider border-t border-slate-800/40 pt-4 text-left">
+                    {t.utilitiesGuideTitle}
+                  </h4>
+                  <p className="font-semibold text-slate-200 leading-relaxed mb-3 text-left">
+                    {t.utilitiesGuideDesc}
+                  </p>
+                  <ul className="list-decimal list-inside space-y-3.5 pl-1.5 mb-5 text-left">
+                    {(t.utilitiesGuideSteps || []).map((step, idx) => (
+                      <li key={idx} className="leading-relaxed break-words whitespace-normal">
+                        <span className="text-slate-300">{step}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
                   {/* Visual Guide Infographic */}
                   <div className="mt-4 border border-slate-800/80 rounded-xl overflow-hidden bg-slate-950/40 p-1.5 flex flex-col items-center gap-1.5">
                     <img 
