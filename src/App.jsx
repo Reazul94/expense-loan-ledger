@@ -29,6 +29,7 @@ import {
   Monitor,
   Smartphone,
   Laptop,
+  ArrowRight,
   ChevronsUp,
   ChevronsDown
 } from 'lucide-react';
@@ -64,6 +65,10 @@ export default function App() {
   const [activeModal, setActiveModal] = useState(null); // 'terms' | 'privacy' | 'storage' | 'install' | null
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [showScrollUp, setShowScrollUp] = useState(false);
+  const [showScrollDown, setShowScrollDown] = useState(true);
+
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
@@ -72,6 +77,31 @@ export default function App() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+
+      // Show scroll up button if we've scrolled down more than 100px
+      setShowScrollUp(scrollTop > 100);
+
+      // Show scroll down button if we aren't near the bottom (more than 100px away)
+      setShowScrollDown(scrollTop + clientHeight < scrollHeight - 100);
+    };
+
+    // Run handler initially to set correct state
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
     };
   }, []);
 
@@ -197,6 +227,124 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
+      {/* Welcome Screen Overlay */}
+      {showWelcome && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 overflow-y-auto p-4 md:p-6 text-slate-100">
+          {/* Ambient blur backgrounds */}
+          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-600/10 blur-[100px] pointer-events-none" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-amber-500/10 blur-[100px] pointer-events-none" />
+
+          {/* Central Glassmorphic Card */}
+          <div className="relative max-w-lg w-full p-6 md:p-8 rounded-3xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-xl shadow-2xl flex flex-col items-center text-center animate-fadeIn my-auto max-h-[92vh] overflow-y-auto scrollbar-thin">
+            
+            {/* Elegant logo with subtle hover scaling */}
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-indigo-600/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-5 shadow-lg glow-indigo transition-transform duration-500 hover:scale-105">
+              <Wallet className="w-8 h-8 md:w-10 md:h-10 text-indigo-400" />
+            </div>
+
+            {/* Titles */}
+            <h2 className="text-xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-200 via-slate-100 to-purple-200 bg-clip-text text-transparent mb-2 leading-tight">
+              {t.welcomeTitle}
+            </h2>
+            <p className="text-xs md:text-sm text-slate-400 max-w-sm mb-6 leading-relaxed">
+              {t.welcomeSubtitle}
+            </p>
+
+            {/* Core features listing */}
+            <div className="w-full text-left space-y-3.5 mb-7">
+              {/* Feature 1 */}
+              <div className="flex gap-3 p-3 rounded-2xl border border-slate-800/50 bg-slate-900/30">
+                <div className="p-2 h-fit rounded-lg bg-indigo-600/15 text-indigo-400 border border-indigo-500/10 shrink-0">
+                  <CreditCard className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-slate-200">{t.featureExpenses}</h3>
+                  <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">{t.featureExpensesDesc}</p>
+                </div>
+              </div>
+
+              {/* Feature 2 */}
+              <div className="flex gap-3 p-3 rounded-2xl border border-slate-800/50 bg-slate-900/30">
+                <div className="p-2 h-fit rounded-lg bg-indigo-600/15 text-indigo-400 border border-indigo-500/10 shrink-0">
+                  <ArrowLeftRight className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-slate-200">{t.featureLoans}</h3>
+                  <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">{t.featureLoansDesc}</p>
+                </div>
+              </div>
+
+              {/* Feature 3 */}
+              <div className="flex gap-3 p-3 rounded-2xl border border-slate-800/50 bg-slate-900/30">
+                <div className="p-2 h-fit rounded-lg bg-indigo-600/15 text-indigo-400 border border-indigo-500/10 shrink-0">
+                  <BookOpen className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-slate-200">{t.featureReflections}</h3>
+                  <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">{t.featureReflectionsDesc}</p>
+                </div>
+              </div>
+
+              {/* Feature 4 */}
+              <div className="flex gap-3 p-3 rounded-2xl border border-slate-800/50 bg-slate-900/30">
+                <div className="p-2 h-fit rounded-lg bg-indigo-600/15 text-indigo-400 border border-indigo-500/10 shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-slate-200">{t.featurePrivacy}</h3>
+                  <p className="text-[10px] text-slate-400 mt-0.5 leading-relaxed">{t.featurePrivacyDesc}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Enter Button & Language Toggle */}
+            <div className="w-full space-y-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowWelcome(false);
+                  // Ensure scroll handlers run after entering
+                  setTimeout(() => {
+                    window.dispatchEvent(new Event('scroll'));
+                  }, 100);
+                }}
+                className="group relative w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-xs transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 border-0"
+              >
+                <span>{t.enterLedger}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </button>
+
+              {/* Welcoming screen language picker */}
+              <div className="flex justify-center items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setLang('en')}
+                  className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase transition-all border-0 ${
+                    lang === 'en'
+                      ? 'bg-slate-800 text-indigo-400 border border-slate-700'
+                      : 'text-slate-500 hover:text-slate-300'
+                  }`}
+                >
+                  English
+                </button>
+                <div className="w-1 h-1 rounded-full bg-slate-800" />
+                <button
+                  type="button"
+                  onClick={() => setLang('bn')}
+                  className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase transition-all border-0 ${
+                    lang === 'bn'
+                      ? 'bg-slate-800 text-indigo-400 border border-slate-700'
+                      : 'text-slate-500 hover:text-slate-300'
+                  }`}
+                >
+                  বাংলা
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
       
       {/* Top Notice Marquee Banner */}
       <MarqueeBanner lang={lang} />
@@ -672,24 +820,30 @@ export default function App() {
         </div>
       )}
       {/* Floating scroll to top/bottom arrows */}
-      <div className="fixed bottom-24 right-4 flex flex-col gap-3.5 z-40">
-        <button
-          type="button"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="w-11 h-11 rounded-full panel-container border border-slate-800 bg-slate-900/90 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 flex items-center justify-center transition-all cursor-pointer shadow-xl glow-indigo border-0 active:scale-90"
-          title={lang === 'en' ? 'Scroll to Top' : 'উপরে যান'}
-        >
-          <ChevronsUp className="w-5 h-5 shrink-0" />
-        </button>
-        <button
-          type="button"
-          onClick={() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })}
-          className="w-11 h-11 rounded-full panel-container border border-slate-800 bg-slate-900/90 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 flex items-center justify-center transition-all cursor-pointer shadow-xl glow-indigo border-0 active:scale-90"
-          title={lang === 'en' ? 'Scroll to Bottom' : 'নিচে যান'}
-        >
-          <ChevronsDown className="w-5 h-5 shrink-0" />
-        </button>
-      </div>
+      {(showScrollUp || showScrollDown) && (
+        <div className="fixed bottom-24 right-4 flex flex-col gap-3.5 z-40">
+          {showScrollUp && (
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="w-11 h-11 rounded-full panel-container border border-slate-800 bg-slate-900/90 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 flex items-center justify-center transition-all cursor-pointer shadow-xl glow-indigo border-0 active:scale-90"
+              title={lang === 'en' ? 'Scroll to Top' : 'উপরে যান'}
+            >
+              <ChevronsUp className="w-5 h-5 shrink-0" />
+            </button>
+          )}
+          {showScrollDown && (
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })}
+              className="w-11 h-11 rounded-full panel-container border border-slate-800 bg-slate-900/90 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 flex items-center justify-center transition-all cursor-pointer shadow-xl glow-indigo border-0 active:scale-90"
+              title={lang === 'en' ? 'Scroll to Bottom' : 'নিচে যান'}
+            >
+              <ChevronsDown className="w-5 h-5 shrink-0" />
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Floating Toast notifications container */}
       <div className="fixed bottom-5 right-5 flex flex-col gap-2.5 z-50 pointer-events-none">

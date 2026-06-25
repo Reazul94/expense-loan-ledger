@@ -103,7 +103,18 @@ export const translations = {
       "No Server Communication: The application works entirely offline once loaded. Your financial entries never leave your device.",
       "Local Storage Only: The only technology used to persist your data is your local browser's localStorage.",
       "Zero Collection: We collect zero personal data, email addresses, names, or financial statistics."
-    ]
+    ],
+    welcomeTitle: "Welcome to WalletLedger Hub",
+    welcomeSubtitle: "Your offline-first, secure, and private personal finance companion.",
+    enterLedger: "Enter Ledger Hub",
+    featureExpenses: "Expense Logging",
+    featureExpensesDesc: "Track daily spends with date grouping, categories, and full note modal previews.",
+    featureLoans: "Debt & P2P Loans",
+    featureLoansDesc: "Manage lent and borrowed balances with roommate summaries and status toggles.",
+    featureReflections: "Spiritual Reflections",
+    featureReflectionsDesc: "Read curated daily Quranic verses, prophetic Hadiths, and Duas for barakah in wealth.",
+    featurePrivacy: "100% Offline Privacy",
+    featurePrivacyDesc: "All data stays inside your browser's local cache. No cloud tracking or data sharing."
   },
   bn: {
     title: "ব্যক্তিগত মাসিক ব্যয় ও ঋণ লেনদেন হাব",
@@ -209,7 +220,18 @@ export const translations = {
       "অফলাইন ব্যবহার: অ্যাপ্লিকেশনটি একবার লোড হওয়ার পর সম্পূর্ণ অফলাইনে কাজ করে। আপনার কোনো ডাটা এই ডিভাইস থেকে বাইরে যায় না।",
       "লোকাল স্টোরেজ: তথ্য জমিয়ে রাখতে শুধুমাত্র আপনার ব্রাউজারের লোকাল স্টোরেজ (localStorage) প্রযুক্তি ব্যবহার করা হয়েছে।",
       "তথ্য সংগ্রহহীনতা: আমরা কোনো ইমেইল ঠিকানা, নাম বা আর্থিক পরিসংখ্যান সংগ্রহ করি না।"
-    ]
+    ],
+    welcomeTitle: "ওয়ালেটলেজার হাবে আপনাকে স্বাগতম",
+    welcomeSubtitle: "আপনার অফলাইন-ফার্স্ট, নিরাপদ এবং সম্পূর্ণ ব্যক্তিগত আর্থিক হিসাবরক্ষক সঙ্গী।",
+    enterLedger: "লেজার হাবে প্রবেশ করুন",
+    featureExpenses: "ব্যয় ও বাজেট হিসাব",
+    featureExpensesDesc: "তারিখ অনুযায়ী ক্যাটাগরি ও নোট সহ দৈনন্দিন ব্যয়ের হিসাব রাখুন ও বিশ্লেষণ করুন।",
+    featureLoans: "ধার ও ঋণ লেজার",
+    featureLoansDesc: "পাওনা এবং দেনার হিসাব ও পরিশোধের স্ট্যাটাস রুমমেট সামারিসহ সহজে ম্যানেজ করুন।",
+    featureReflections: "ইসলামিক নির্দেশনা",
+    featureReflectionsDesc: "উপার্জনে বরকতের জন্য প্রতিদিনের কুরআনের আয়াত, হাদিস ও দোয়া পড়ুন।",
+    featurePrivacy: "১০০% নিরাপদ অফলাইন",
+    featurePrivacyDesc: "আপনার সকল তথ্য শুধুমাত্র ব্রাউজারের লোকাল ক্যাশে থাকবে, কোনো সার্ভারে যাবে না।"
   }
 };
 
