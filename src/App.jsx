@@ -10,6 +10,7 @@ import SettingsPanel from './components/SettingsPanel';
 import DailyVerseCard from './components/DailyVerseCard';
 import DailyHadithCard from './components/DailyHadithCard';
 import DailyDuaCard from './components/DailyDuaCard';
+import QuranReader from './components/QuranReader';
 import { 
   Wallet, 
   ArrowLeftRight, 
@@ -74,6 +75,7 @@ export default function App() {
     const saved = localStorage.getItem('expense_hub_reflections_collapsed');
     return saved ? JSON.parse(saved) : false;
   });
+  const [currentView, setCurrentView] = useState('main'); // 'main' | 'quran'
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
@@ -234,6 +236,16 @@ export default function App() {
     if (importedData.incomes) setIncomes(importedData.incomes);
     showToast(t.toastSuccessImport);
   };
+
+  if (currentView === 'quran') {
+    return (
+      <QuranReader 
+        lang={lang} 
+        t={t} 
+        onClose={() => setCurrentView('main')} 
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
@@ -449,6 +461,37 @@ export default function App() {
           lang={lang} 
           t={t} 
         />
+
+        {/* Full Quran Explorer Entry Card */}
+        <div className="panel-container border border-slate-800/80 bg-gradient-to-tr from-indigo-900/10 via-purple-900/5 to-slate-900/20 rounded-3xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl hover:border-indigo-500/30 group">
+          <div className="flex items-center gap-3.5 min-w-0 text-left w-full sm:w-auto">
+            <div className="p-3 rounded-2xl bg-indigo-600/15 border border-indigo-500/20 text-indigo-400 group-hover:scale-105 transition-transform shrink-0 shadow-md glow-indigo">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-black uppercase tracking-wider text-slate-100 flex items-center gap-1.5">
+                {lang === 'en' ? 'Holy Quran Explorer' : 'পবিত্র আল-কুরআন এক্সপ্লোরার'}
+                <span className="text-[9px] font-black uppercase bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full">
+                  {lang === 'en' ? 'Full Quran' : 'পূর্ণাঙ্গ কুরআন'}
+                </span>
+              </h3>
+              <p className="text-[10px] text-slate-400 mt-1 leading-relaxed max-w-md">
+                {lang === 'en'
+                  ? 'Read and search all 114 Surahs with complete Arabic script and Bengali translation.'
+                  : 'সম্পূর্ণ আরবি হরফ ও বাংলা অনুবাদসহ ১১৪টি সূরা সহজে সন্ধান করুন ও পাঠ করুন।'}
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setCurrentView('quran')}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-xs active:scale-[0.98] transition-all cursor-pointer shadow-lg hover:shadow-indigo-500/10 border-0 shrink-0"
+          >
+            <span>{lang === 'en' ? 'Explore Quran' : 'কুরআন প্রবেশ করুন'}</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
 
         {/* Daily Reflections Section (Quran, Hadith & Dua) */}
         <div className="panel-container border border-slate-800/80 bg-slate-900/20 rounded-3xl overflow-hidden transition-all duration-300 shadow-md">
