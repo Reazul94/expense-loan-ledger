@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { translations } from './utils/translations';
 import MarqueeBanner from './components/MarqueeBanner';
 import LedgerSelector from './components/LedgerSelector';
@@ -167,11 +167,14 @@ export default function App() {
   }, [reflectionsCollapsed]);
 
   // 5 Minutes Idle Timeout Logic
+  const lastActivityRef = useRef(Date.now());
+
   useEffect(() => {
     if (!currentUser) return;
 
-    let timeoutId;
     const IDLE_TIME = 5 * 60 * 1000; // 5 minutes in ms
+    let timeoutId;
+    let intervalId;
 
     const logoutUser = () => {
       setCurrentUser(null);
@@ -182,23 +185,55 @@ export default function App() {
       );
     };
 
+    const checkIdle = () => {
+      const elapsed = Date.now() - lastActivityRef.current;
+      if (elapsed >= IDLE_TIME) {
+        logoutUser();
+        return true;
+      }
+      return false;
+    };
+
     const resetIdleTimer = () => {
+      if (checkIdle()) return;
       if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(logoutUser, IDLE_TIME);
+      timeoutId = setTimeout(() => {
+        logoutUser();
+      }, IDLE_TIME);
+    };
+
+    const handleActivity = () => {
+      const isLoggedOut = checkIdle();
+      if (!isLoggedOut) {
+        lastActivityRef.current = Date.now();
+        resetIdleTimer();
+      }
     };
 
     // Events to monitor for user activity
-    const events = ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'];
-    const handleActivity = () => resetIdleTimer();
-
+    const events = ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart', 'focus', 'click'];
     events.forEach(event => window.addEventListener(event, handleActivity, { passive: true }));
 
-    // Start timer initially
+    // Document visibility change check (handles tab wake up / device unlock)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkIdle();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Initial setting of the timer and activity timestamp
+    lastActivityRef.current = Date.now();
     resetIdleTimer();
+
+    // Periodic check every 10 seconds (backup for throttled setTimeout in background tabs)
+    intervalId = setInterval(checkIdle, 10000);
 
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
       events.forEach(event => window.removeEventListener(event, handleActivity));
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [currentUser, lang]);
 
