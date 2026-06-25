@@ -356,8 +356,14 @@ export default function App() {
     return (
       <QuranReader 
         lang={lang} 
+        setLang={setLang}
         t={t} 
         onClose={() => setCurrentView('main')} 
+        currentUser={currentUser}
+        currentDateTime={currentDateTime}
+        theme={theme}
+        setTheme={setTheme}
+        handleLogout={handleLogout}
       />
     );
   }

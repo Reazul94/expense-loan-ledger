@@ -17,12 +17,34 @@ import {
   Pause,
   Volume2,
   Square,
-  Repeat
+  Repeat,
+  LogOut,
+  Palette
 } from 'lucide-react';
 import { surahList } from '../utils/quranData';
 import { toBengaliDigits } from './LedgerSelector';
 
-export default function QuranReader({ lang, t, onClose }) {
+export const recitersList = [
+  { id: 'ar.alafasy', name: 'Mishary Rashid Al-Afasy', nameBn: 'মিশারী রশীদ আল-আফাসী' },
+  { id: 'ar.mahermuaiqly', name: 'Maher Al Muaiqly', nameBn: 'মাহের আল-মুআইকিলী' },
+  { id: 'ar.husary', name: 'Mahmoud Khalil Al-Husary', nameBn: 'মাহমুদ খলিল আল-হুসারী' },
+  { id: 'ar.minshawi', name: 'Mohamed Siddiq Al-Minshawi', nameBn: 'মোহাম্মদ সিদ্দিক আল-মিনশাবি' },
+  { id: 'ar.ahmedajamy', name: 'Ahmed Al-Ajamy', nameBn: 'আহমেদ আল-আজমি' },
+  { id: 'ar.shaatree', name: 'Abu Bakr Ash-Shaatree', nameBn: 'আবু বকর আশ-শাতরি' },
+  { id: 'ar.hudhaify', name: 'Ali Al-Huthaify', nameBn: 'আলী আল-হুজাইফী' }
+];
+
+export default function QuranReader({ 
+  lang, 
+  setLang,
+  t, 
+  onClose,
+  currentUser,
+  currentDateTime,
+  theme,
+  setTheme,
+  handleLogout
+}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSurah, setSelectedSurah] = useState(null);
   const [verses, setVerses] = useState([]);
@@ -35,6 +57,14 @@ export default function QuranReader({ lang, t, onClose }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [continuousPlay, setContinuousPlay] = useState(true);
   const [currentQueueType, setCurrentQueueType] = useState(null); // 'auzubillah' | 'bismillah' | 'ayah'
+  const [selectedReciter, setSelectedReciter] = useState(() => {
+    const saved = localStorage.getItem('expense_hub_quran_reciter');
+    if (saved) {
+      const found = recitersList.find(r => r.id === saved);
+      if (found) return found;
+    }
+    return recitersList[0];
+  });
 
   const audioRef = useRef(null);
   const queueRef = useRef([]);
@@ -42,6 +72,7 @@ export default function QuranReader({ lang, t, onClose }) {
   const selectedSurahRef = useRef(selectedSurah);
   const versesRef = useRef(verses);
   const continuousPlayRef = useRef(continuousPlay);
+  const selectedReciterRef = useRef(selectedReciter);
 
   // Sync refs with state to prevent stale closure issues in audio listeners
   useEffect(() => {
@@ -55,6 +86,11 @@ export default function QuranReader({ lang, t, onClose }) {
   useEffect(() => {
     continuousPlayRef.current = continuousPlay;
   }, [continuousPlay]);
+
+  useEffect(() => {
+    selectedReciterRef.current = selectedReciter;
+    localStorage.setItem('expense_hub_quran_reciter', selectedReciter.id);
+  }, [selectedReciter]);
 
   // Scroll active playing Ayah into view
   useEffect(() => {
@@ -95,16 +131,21 @@ export default function QuranReader({ lang, t, onClose }) {
     const queue = [];
     if (!skipIntro) {
       // 1. Aujubillah
+      // Play Al-Husary's own Aujubillah if selected, otherwise fallback to Al-Afasy
+      const aujubillahUrl = selectedReciterRef.current.id === 'ar.husary'
+        ? 'https://everyayah.com/data/Husary_128kbps/audhubillah.mp3'
+        : 'https://everyayah.com/data/Alafasy_128kbps/audhubillah.mp3';
+
       queue.push({
         type: 'auzubillah',
-        url: 'https://everyayah.com/data/Alafasy_128kbps/audhubillah.mp3',
+        url: aujubillahUrl,
         ayahId: ayahNumber
       });
       // 2. Bismillah (except for Surah 9)
       if (selectedSurahRef.current && selectedSurahRef.current.number !== 9) {
         queue.push({
           type: 'bismillah',
-          url: 'https://cdn.islamic.network/quran/audio/128/ar.alafasy/1.mp3',
+          url: `https://cdn.islamic.network/quran/audio/128/${selectedReciterRef.current.id}/1.mp3`,
           ayahId: ayahNumber
         });
       }
@@ -112,7 +153,7 @@ export default function QuranReader({ lang, t, onClose }) {
     // 3. The target Ayah
     queue.push({
       type: 'ayah',
-      url: `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${ayahNumber}.mp3`,
+      url: `https://cdn.islamic.network/quran/audio/128/${selectedReciterRef.current.id}/${ayahNumber}.mp3`,
       ayahId: ayahNumber
     });
 
@@ -356,45 +397,123 @@ export default function QuranReader({ lang, t, onClose }) {
       
       {/* Top Banner Header */}
       <header className="w-full border-b backdrop-blur-md relative md:sticky md:top-0 z-40 panel-container">
-        <div className="max-w-7xl mx-auto px-4 py-3 md:h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 py-3 md:h-16 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
+          
+          {/* Logo / Title */}
           <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={selectedSurah ? handleGoBackToList : () => { handleStopAudio(); onClose(); }}
-              className="p-2 rounded-xl text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-all border-0 bg-transparent cursor-pointer flex items-center justify-center"
+              className="p-2 rounded-xl text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-all border-0 bg-transparent cursor-pointer flex items-center justify-center shrink-0"
               title={lang === 'en' ? 'Back' : 'পেছনে যান'}
             >
               <ChevronLeft className="w-5 h-5 shrink-0" />
             </button>
             
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 shadow-md shadow-indigo-600/20 text-white">
+              <div className="p-2 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 shadow-md shadow-indigo-600/20 text-white shrink-0">
                 <BookOpen className="w-4 h-4" />
               </div>
-              <div>
-                <h1 className="text-xs sm:text-sm font-extrabold tracking-tight bg-gradient-to-r from-indigo-200 via-slate-100 to-purple-200 bg-clip-text text-transparent">
+              <div className="min-w-0">
+                <h1 className="text-xs sm:text-sm font-extrabold tracking-tight bg-gradient-to-r from-indigo-200 via-slate-100 to-purple-200 bg-clip-text text-transparent truncate">
                   {lang === 'en' ? 'Holy Quran Explorer' : 'পবিত্র আল-কুরআন এক্সপ্লোরার'}
                 </h1>
-                <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">
+                <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest truncate">
                   {selectedSurah 
                     ? `${selectedSurah.englishName} (${selectedSurah.name})` 
                     : (lang === 'en' ? 'Read Complete Quran' : 'সম্পূর্ণ কুরআন পড়ুন')}
                 </p>
               </div>
             </div>
+
+            {selectedSurah && (
+              <button
+                type="button"
+                onClick={() => fetchSurah(selectedSurah.number)}
+                disabled={loading}
+                className="p-2 rounded-xl text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-all border-0 bg-transparent cursor-pointer disabled:opacity-50 flex items-center justify-center shrink-0 animate-fadeIn"
+                title={lang === 'en' ? 'Refresh Surah' : 'রিফ্রেশ করুন'}
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              </button>
+            )}
           </div>
 
-          {selectedSurah && (
-            <button
-              type="button"
-              onClick={() => fetchSurah(selectedSurah.number)}
-              disabled={loading}
-              className="p-2 rounded-xl text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-all border-0 bg-transparent cursor-pointer disabled:opacity-50 flex items-center justify-center"
-              title={lang === 'en' ? 'Refresh Surah' : 'রিফ্রেশ করুন'}
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            </button>
+          {/* User & Live Clock Info */}
+          {currentUser && (
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2.5 text-center sm:text-left text-[10px] font-extrabold tracking-wide text-slate-400 bg-slate-950/20 border border-slate-800/40 rounded-xl px-3 py-1.5 md:py-2">
+              <div className="flex items-center justify-center sm:justify-start gap-1.5 text-indigo-400 uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                <span>{lang === 'en' ? 'User:' : 'ব্যবহারকারী:'} <span className="text-slate-100 font-black">{currentUser.name}</span></span>
+              </div>
+              <span className="hidden sm:inline text-slate-800 font-normal">|</span>
+              <div className="text-slate-300 font-mono tracking-tight select-all">
+                {currentDateTime.toLocaleString(lang === 'bn' ? 'bn-BD' : 'en-US', { dateStyle: 'medium', timeStyle: 'medium' })}
+              </div>
+            </div>
           )}
+
+          {/* Controls: Theme, Language, Logout */}
+          <div className="flex items-center gap-3">
+            {/* Theme Selector */}
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg panel-container">
+              <Palette className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+              <select
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                className="bg-transparent border-0 text-[10px] font-extrabold uppercase focus:ring-0 focus:outline-none cursor-pointer py-0.5"
+                style={{ color: 'var(--text-color)' }}
+              >
+                <option value="light" className="bg-[var(--bg-color)] text-[var(--text-color)]">{lang === 'en' ? 'Light Theme' : 'লাইট থিম'}</option>
+                <option value="dark" className="bg-[var(--bg-color)] text-[var(--text-color)]">{lang === 'en' ? 'Dark Theme' : 'ডার্ক থিম'}</option>
+                <option value="mint" className="bg-[var(--bg-color)] text-[var(--text-color)]">{lang === 'en' ? 'Mint Theme' : 'মিন্ট থিম'}</option>
+                <option value="solarized" className="bg-[var(--bg-color)] text-[var(--text-color)]">Solarized</option>
+                <option value="dracula" className="bg-[var(--bg-color)] text-[var(--text-color)]">Dracula</option>
+                <option value="onedark" className="bg-[var(--bg-color)] text-[var(--text-color)]">One Dark</option>
+                <option value="nord" className="bg-[var(--bg-color)] text-[var(--text-color)]">Nord Theme</option>
+              </select>
+            </div>
+
+            {/* Bilingual Language Switcher */}
+            <div className="flex items-center p-0.5 rounded-lg panel-container">
+              <button
+                type="button"
+                onClick={() => setLang('en')}
+                className={`px-3 py-1 rounded text-[10px] font-extrabold uppercase transition-all duration-300 ${
+                  lang === 'en'
+                    ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-md shadow-indigo-600/10'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => setLang('bn')}
+                className={`px-3 py-1 rounded text-[10px] font-extrabold uppercase transition-all duration-300 ${
+                  lang === 'bn'
+                    ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-md shadow-indigo-600/10'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                বাংলা
+              </button>
+            </div>
+
+            {/* Logout Button */}
+            {currentUser && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg panel-container text-[10px] font-extrabold uppercase text-rose-400 hover:text-rose-300 hover:bg-rose-500/5 transition-all cursor-pointer border-0"
+                title={lang === 'en' ? 'Log Out' : 'লগ আউট'}
+              >
+                <LogOut className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                <span className="hidden sm:inline">{lang === 'en' ? 'Log Out' : 'লগ আউট'}</span>
+              </button>
+            )}
+          </div>
+
         </div>
       </header>
 
@@ -500,11 +619,33 @@ export default function QuranReader({ lang, t, onClose }) {
                 </span>
               </div>
               {verses.length > 0 && (
-                <div className="mt-5 flex justify-center">
+                <div className="mt-5 flex flex-col sm:flex-row justify-center items-center gap-3">
+                  {/* Reciter Selector Dropdown */}
+                  <div className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-slate-950/40 border border-slate-800 shrink-0">
+                    <Volume2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                    <select
+                      value={selectedReciter.id}
+                      onChange={(e) => {
+                        const newRec = recitersList.find(r => r.id === e.target.value);
+                        if (newRec) {
+                          handleStopAudio();
+                          setSelectedReciter(newRec);
+                        }
+                      }}
+                      className="bg-transparent border-0 text-[10px] font-extrabold uppercase focus:ring-0 focus:outline-none cursor-pointer py-0.5 text-slate-300"
+                    >
+                      {recitersList.map(r => (
+                        <option key={r.id} value={r.id} className="bg-slate-900 text-slate-200">
+                          {lang === 'bn' ? r.nameBn : r.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   <button
                     type="button"
                     onClick={() => handlePlayPause(verses[0].number)}
-                    className="flex items-center gap-2 px-5 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all active:scale-[0.98] cursor-pointer shadow-md glow-indigo border-0"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all active:scale-[0.98] cursor-pointer shadow-md glow-indigo border-0"
                   >
                     {playingAyahId && isPlaying ? (
                       <>
@@ -514,7 +655,7 @@ export default function QuranReader({ lang, t, onClose }) {
                     ) : (
                       <>
                         <Play className="w-4 h-4 fill-current" />
-                        <span>{lang === 'en' ? 'Play Surah (Mishary Alafasy)' : 'সূরা শুনুন (মিশারী আলাফাসী)'}</span>
+                        <span>{lang === 'en' ? 'Play Surah' : 'সূরা শুনুন'}</span>
                       </>
                     )}
                   </button>
@@ -693,7 +834,7 @@ export default function QuranReader({ lang, t, onClose }) {
               </div>
 
               <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest bg-slate-950/40 px-2 py-0.5 rounded border border-slate-800 shrink-0">
-                {lang === 'en' ? 'ar.alafasy' : 'মিশারী আলাফাসী'}
+                {lang === 'bn' ? selectedReciter.nameBn : selectedReciter.name}
               </span>
             </div>
 
