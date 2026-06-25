@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Wallet, Phone, Mail, Lock, User, Key, ArrowRight, ArrowLeft, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react';
+import { Wallet, Phone, Mail, Lock, User, Key, ArrowRight, ArrowLeft, RefreshCw, AlertCircle, CheckCircle, Info } from 'lucide-react';
 
 export default function AuthPage({ lang, setLang, onLoginSuccess }) {
   const [view, setView] = useState('login'); // 'login', 'register', 'forgot', 'reset'
