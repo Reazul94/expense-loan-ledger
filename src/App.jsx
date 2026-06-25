@@ -50,13 +50,7 @@ export default function App() {
     return `${now.getFullYear()}-${month}`;
   });
 
-  const [currentUser, setCurrentUser] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('expense_hub_current_user') || 'null');
-    } catch {
-      return null;
-    }
-  });
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [expenses, setExpenses] = useState([]);
   const [loans, setLoans] = useState([]);
@@ -145,14 +139,10 @@ export default function App() {
     }
   }, [currentUser]);
 
-  // Save current user to local storage
+  // Clear any existing stored current user to ensure session does not persist across page reloads
   useEffect(() => {
-    if (currentUser) {
-      localStorage.setItem('expense_hub_current_user', JSON.stringify(currentUser));
-    } else {
-      localStorage.removeItem('expense_hub_current_user');
-    }
-  }, [currentUser]);
+    localStorage.removeItem('expense_hub_current_user');
+  }, []);
 
   useEffect(() => {
     if (currentUser) {
