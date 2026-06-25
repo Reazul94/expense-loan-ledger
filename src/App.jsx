@@ -29,8 +29,8 @@ import {
   Monitor,
   Smartphone,
   Laptop,
-  ArrowUp,
-  ArrowDown
+  ChevronsUp,
+  ChevronsDown
 } from 'lucide-react';
 
 export default function App() {
@@ -672,22 +672,22 @@ export default function App() {
         </div>
       )}
       {/* Floating scroll to top/bottom arrows */}
-      <div className="fixed bottom-24 right-5 flex flex-col gap-2 z-40">
+      <div className="fixed bottom-24 right-4 flex flex-col gap-3.5 z-40">
         <button
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="p-3 rounded-full panel-container border border-slate-800/80 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all cursor-pointer shadow-xl glow-indigo border-0"
+          className="w-11 h-11 rounded-full panel-container border border-slate-800 bg-slate-900/90 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 flex items-center justify-center transition-all cursor-pointer shadow-xl glow-indigo border-0 active:scale-90"
           title={lang === 'en' ? 'Scroll to Top' : 'উপরে যান'}
         >
-          <ArrowUp className="w-4 h-4" />
+          <ChevronsUp className="w-5 h-5 shrink-0" />
         </button>
         <button
           type="button"
           onClick={() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })}
-          className="p-3 rounded-full panel-container border border-slate-800/80 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all cursor-pointer shadow-xl glow-indigo border-0"
+          className="w-11 h-11 rounded-full panel-container border border-slate-800 bg-slate-900/90 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 flex items-center justify-center transition-all cursor-pointer shadow-xl glow-indigo border-0 active:scale-90"
           title={lang === 'en' ? 'Scroll to Bottom' : 'নিচে যান'}
         >
-          <ArrowDown className="w-4 h-4" />
+          <ChevronsDown className="w-5 h-5 shrink-0" />
         </button>
       </div>
 

@@ -177,7 +177,7 @@ export default function SettingsPanel({ expenses, loans, onResetAll, onImportAll
           onClick={handleImportClick}
           className="flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-400 font-semibold text-xs transition-all active:scale-[0.98]"
         >
-          <Upload className="w-4.5 h-4.5" />
+          <Download className="w-4.5 h-4.5" />
           {t.importJson}
         </button>
 
