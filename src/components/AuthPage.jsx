@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Wallet, Phone, Mail, Lock, User, Key, ArrowRight, ArrowLeft, RefreshCw, AlertCircle, CheckCircle } from 'lucide-react';
 
-export default function AuthPage({ lang, onLoginSuccess }) {
+export default function AuthPage({ lang, setLang, onLoginSuccess }) {
   const [view, setView] = useState('login'); // 'login', 'register', 'forgot', 'reset'
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
@@ -54,8 +54,12 @@ export default function AuthPage({ lang, onLoginSuccess }) {
       simulationBody: "Since this ledger runs locally on your browser, a real email was not sent. We simulated sending the recovery code to:",
       simulationCode: "Your Verification Code:",
       simulationEnter: "Please write down this code and enter it on the next screen.",
-      enterCode: "Enter 6-Digit Code",
-      verify: "Verify & Proceed"
+      verify: "Verify & Proceed",
+      upgradeTitle: "Upgrade & Data Security Guide",
+      upgradeDeployTitle: "App Upgrades & Deployments",
+      upgradeDeployDesc: "If a new update is launched, simply reload the page or close & reopen the app (if installed as PWA) to activate the latest features. Your stored ledger data is completely safe.",
+      upgradeBackupTitle: "Local-Only Storage Warning",
+      upgradeBackupDesc: "This ledger is serverless and runs 100% offline. All accounts, passwords, and entries reside locally in your browser cache. Please back up/export your database regularly from Settings to prevent data loss."
     },
     bn: {
       login: "লেজারে লগইন করুন",
@@ -91,8 +95,12 @@ export default function AuthPage({ lang, onLoginSuccess }) {
       simulationBody: "যেহেতু এই হিসাবরক্ষক অ্যাপটি সম্পূর্ণ অফলাইনে চলে, কোনো বাস্তব ইমেইল পাঠানো হয়নি। নিচের ঠিকানায় ইমেইল পাঠানোর সিমুলেশন করা হয়েছে:",
       simulationCode: "ভেরিফিকেশন কোড:",
       simulationEnter: "অনুগ্রহ করে কোডটি লিখে পরবর্তী স্ক্রিনে প্রবেশ করান।",
-      enterCode: "৬ ডিজিটের কোডটি লিখুন",
-      verify: "কোড যাচাই করুন"
+      verify: "কোড যাচাই করুন",
+      upgradeTitle: "আপগ্রেড ও ডাটা নিরাপত্তা গাইড",
+      upgradeDeployTitle: "অ্যাপ আপগ্রেড এবং আপডেট",
+      upgradeDeployDesc: "নতুন কোনো আপডেট আসলে পেজটি রিফ্রেশ করুন অথবা PWA ইনস্টল করা থাকলে অ্যাপটি বন্ধ করে পুনরায় চালু করুন। আপনার লোকাল ডাটা নিরাপদ থাকবে।",
+      upgradeBackupTitle: "লোকাল স্টোরেজ সতর্কতা",
+      upgradeBackupDesc: "এই অ্যাপটি সম্পূর্ণ অফলাইনে কাজ করে। সকল অ্যাকাউন্ট এবং হিসাবের ডাটা আপনার ব্রাউজারের লোকাল ক্যাশে থাকে। ডাটা হারানোর ঝুঁকি এড়াতে নিয়মিত ব্যাকআপ ফাইল (JSON) ডাউনলোড করুন।"
     }
   }[lang];
 
@@ -276,6 +284,35 @@ export default function AuthPage({ lang, onLoginSuccess }) {
             {t[view]}
           </p>
         </div>
+
+        {/* Language selector in AuthPage */}
+        {setLang && (
+          <div className="flex justify-center items-center gap-2 mb-4">
+            <button
+              type="button"
+              onClick={() => setLang('en')}
+              className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase transition-all border-0 ${
+                lang === 'en'
+                  ? 'bg-slate-800 text-indigo-400 border border-slate-700'
+                  : 'text-slate-500 hover:text-slate-300 bg-transparent'
+              }`}
+            >
+              EN
+            </button>
+            <div className="w-1 h-1 rounded-full bg-slate-800" />
+            <button
+              type="button"
+              onClick={() => setLang('bn')}
+              className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase transition-all border-0 ${
+                lang === 'bn'
+                  ? 'bg-slate-800 text-indigo-400 border border-slate-700'
+                  : 'text-slate-500 hover:text-slate-300 bg-transparent'
+              }`}
+            >
+              বাংলা
+            </button>
+          </div>
+        )}
 
         {/* Global Error Alert */}
         {error && (
@@ -628,6 +665,41 @@ export default function AuthPage({ lang, onLoginSuccess }) {
           </div>
         </div>
       )}
+
+      {/* Upgrade & Security Guide Card */}
+      <div className="w-full max-w-md mt-6 p-5 rounded-2xl border border-slate-800/80 bg-slate-900/40 backdrop-blur-md z-10 animate-fadeIn space-y-4">
+        
+        {/* Header */}
+        <div className="flex items-center gap-2 pb-2.5 border-b border-slate-800/50">
+          <div className="p-1.5 rounded-lg bg-indigo-600/15 text-indigo-400 border border-indigo-500/10 shrink-0">
+            <Info className="w-4 h-4" />
+          </div>
+          <h3 className="text-xs font-black uppercase tracking-wider text-slate-200">
+            {t.upgradeTitle}
+          </h3>
+        </div>
+
+        {/* Step 1: Upgrades */}
+        <div className="space-y-1">
+          <h4 className="text-[10px] font-extrabold uppercase text-indigo-400 tracking-wider">
+            {t.upgradeDeployTitle}
+          </h4>
+          <p className="text-[11px] leading-relaxed text-slate-400 font-medium">
+            {t.upgradeDeployDesc}
+          </p>
+        </div>
+
+        {/* Step 2: Storage warning */}
+        <div className="space-y-1">
+          <h4 className="text-[10px] font-extrabold uppercase text-amber-550 tracking-wider flex items-center gap-1">
+            <AlertCircle className="w-3 h-3 text-amber-500 shrink-0" />
+            {t.upgradeBackupTitle}
+          </h4>
+          <p className="text-[11px] leading-relaxed text-slate-400 font-medium">
+            {t.upgradeBackupDesc}
+          </p>
+        </div>
+      </div>
 
     </div>
   );
