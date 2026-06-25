@@ -82,26 +82,28 @@ export const translations = {
     whatsappHelp: "WhatsApp Help",
     close: "Close",
     storageGuideTitle: "Local Storage Instructions",
-    storageGuideDesc: "This application runs 100% locally on your device. Here is how your data is handled:",
+    storageGuideDesc: "This application runs 100% locally on your device. Here is how your data and accounts are handled:",
     storageGuideSteps: [
-      "Auto-Save: Every transaction you add, edit, or delete is instantly saved into your browser's localStorage.",
-      "Privacy First: Your data is never uploaded to any cloud server or database. It remains private to your device.",
-      "How to Export: Go to the Utilities panel at the bottom, click 'Export All Data (JSON)', which downloads your 'expense_hub_database_backup.json' file.",
-      "How to Import: On a new device, click 'Import Data (JSON)' in the Utilities panel and select your downloaded backup file to instantly load your records.",
-      "Preventing Data Loss: Browser history resets, cookie wipes, or cache clears delete local records. Save a JSON backup file beforehand to prevent data loss."
+      "Account & Profiles: The registration name, email, and 11-digit mobile number you register with are saved locally in your browser's localStorage cache (using hashed credentials).",
+      "Multi-user Isolation: Data is namespaced using the logged-in user's mobile number, ensuring data separation for multiple accounts on the same device.",
+      "Auto-Save: Every transaction you add, edit, or delete is instantly saved into your browser's localStorage under your account namespace.",
+      "Privacy First: Your data, user account, password, and financial entries are never uploaded to any cloud server or database. It remains private to your device.",
+      "How to Export/Backup: Go to the Utilities panel at the bottom, click 'Export All Data (JSON)', which downloads your 'expense_hub_database_backup.json' file (which contains accounts and profiles as well).",
+      "How to Import/Restore: On a new device, click 'Import Data (JSON)' in the Utilities panel and select your downloaded backup file to instantly load your records.",
+      "Preventing Data Loss & Passwords: Resetting browser cache, cookies, or history deletes local records and registered accounts. Save a JSON backup file beforehand to prevent data loss."
     ],
     termsTitle: "Terms & Conditions",
     termsList: [
       "WalletLedger Hub is a free, local client-side utility provided 'as-is' without warranties of any kind.",
-      "No Data Retention: We do not store, host, or back up any of your records on external servers.",
-      "Loss of Records: The developers are not liable for any data loss caused by browser cleaning, cookie deletions, disk failure, or cache resets.",
+      "No Data Retention: We do not store, host, or back up any of your registered user accounts, passwords, or transaction entries on external servers.",
+      "Loss of Records: The developers are not liable for any lost passwords, forgotten credentials, or data loss caused by browser cleaning, cookie deletions, disk failure, or cache resets.",
       "Permitted Use: You are free to use, copy, modify, and share this application for personal finance tracking purposes."
     ],
     privacyTitle: "Privacy & Data Policy",
     privacyList: [
+      "Local Authentication: User registration, mobile numbers, emails, and passwords are saved completely offline in your browser's localStorage. No analytics or server side communication takes place.",
       "No Analytics: We do not use cookies, tracking scripts, or advertisement networks.",
-      "No Server Communication: The application works entirely offline once loaded. Your financial entries never leave your device.",
-      "Local Storage Only: The only technology used to persist your data is your local browser's localStorage.",
+      "No Server Communication: The application works entirely offline once loaded. Your account info and financial entries never leave your device.",
       "Zero Collection: We collect zero personal data, email addresses, names, or financial statistics."
     ],
     welcomeTitle: "Welcome to WalletLedger Hub",
@@ -182,7 +184,7 @@ export const translations = {
     importJson: "ডাটা ইম্পোর্ট করুন (JSON)",
     resetDatabase: "ডাটাবেজ ক্যাশ রিসেট",
     resetConfirm: "আপনি কি নিশ্চিত যে সমস্ত খরচের এবং ঋণের ডাটা মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।",
-    storageTooltip: "আপনার সমস্ত তথ্য ব্রাউজারের localStorage-এ সংরক্ষিত থাকে। কোনো বহিরাগত সার্ভারের সাথে যোগাযোগ করা হয় না। ব্রাউজার ক্যাশ বা কুকিজ পরিষ্কার করলে অথবা রিসেট বাটনে ক্লিক করলে সমস্ত ডাটা মুছে যাবে।",
+    storageTooltip: "আপনার সমস্ত তথ্য ব্রাউজারের localStorage-এ সংরক্ষিত থাকে। কোনো বাস্থব সার্ভারের সাথে যোগাযোগ করা হয় না। ব্রাউজার ক্যাশ বা কুকিজ পরিষ্কার করলে অথবা রিসেট বাটনে ক্লিক করলে সমস্ত ডাটা মুছে যাবে।",
     toastSuccessAdd: "সফলভাবে যোগ করা হয়েছে!",
     toastSuccessEdit: "সফলভাবে সংশোধন করা হয়েছে!",
     toastSuccessDelete: "সফলভাবে মুছে ফেলা হয়েছে!",
@@ -201,31 +203,33 @@ export const translations = {
     storageGuideTitle: "লোকাল স্টোরেজ গাইড",
     storageGuideDesc: "এই অ্যাপ্লিকেশনটি আপনার ডিভাইসে ১০০% লোকালভাবে কাজ করে। ডাটা স্টোরেজ সংক্রান্ত তথ্যসমূহ নিচে দেওয়া হলো:",
     storageGuideSteps: [
+      "অ্যাকাউন্ট ও প্রোফাইল: আপনার নিবন্ধিত নাম, ইমেইল এবং ১১ ডিজিটের মোবাইল নম্বরটি ব্রাউজারের localStorage-এ সম্পূর্ণ অফলাইনে সংরক্ষিত থাকে।",
+      "মাল্টি-ইউজার ডাটা পৃথকীকরণ: মোবাইল নম্বরের ওপর ভিত্তি করে ডাটা আলাদা করা হয়, ফলে একই ডিভাইসে একাধিক অ্যাকাউন্ট একে অপরের ডাটা না দেখেই ব্যবহার করতে পারে।",
       "অটো-সেভ: খরচ বা ঋণের প্রতিটি এন্ট্রি আপনার ব্রাউজারের localStorage-এ স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়।",
-      "শতভাগ গোপনীয়তা: আপনার কোনো ডাটা ক্লাউড সার্ভারে বা ইন্টারনেটে পাঠানো হয় না। এটি আপনার ডিভাইসেই থাকে।",
-      "ডাটা ব্যাকআপ বা এক্সপোর্ট: পেজের নিচের সেটিংস প্যানেলে যান এবং 'সব ডাটা ডাউনলোড (JSON)' বাটনে ক্লিক করে 'expense_hub_database_backup.json' ফাইলটি আপনার ডিভাইসে ডাউনলোড করুন।",
-      "ডাটা রিস্টোর বা ইম্পোর্ট: নতুন ডিভাইসে গিয়ে পেজের নিচের সেটিংস প্যানেলে 'ডাটা ইম্পোর্ট করুন (JSON)' বাটনে ক্লিক করে আগে ডাউনলোড করা ব্যাকআপ ফাইলটি নির্বাচন করুন।",
-      "ডাটা হারানোর সতর্কতা: ব্রাউজার ক্যাশ বা কুকিজ মুছে ফেললে আপনার জমানো হিসাব মুছে যাবে। তাই নিয়মিত বা ব্রাউজার পরিষ্কার করার আগে একটি JSON ব্যাকআপ সংরক্ষণ করুন।"
+      "শতভাগ গোপনীয়তা: আপনার কোনো ডাটা, অ্যাকাউন্ট পাসওয়ার্ড বা লেনদেনের বিবরণ ক্লাউড সার্ভারে বা ইন্টারনেটে পাঠানো হয় না। এটি আপনার ডিভাইসেই থাকে।",
+      "ডাটা ব্যাকআপ বা এক্সপোর্ট: সেটিংস প্যানেলে যান এবং 'সব ডাটা ডাউনলোড (JSON)' বাটনে ক্লিক করে 'expense_hub_database_backup.json' ফাইলটি ডাউনলোড করুন (এতে অ্যাকাউন্ট ও পাসওয়ার্ডও ব্যাকআপ হয়ে থাকে)।",
+      "ডাটা রিস্টোর বা ইম্পোর্ট: নতুন ডিভাইসে সেটিংস প্যানেলে 'ডাটা ইম্পোর্ট করুন (JSON)' বাটনে ক্লিক করে আগে ডাউনলোড করা ব্যাকআপ ফাইলটি নির্বাচন করুন।",
+      "ডাটা ও পাসওয়ার্ড হারানোর সতর্কতা: ব্রাউজার ক্যাশ বা কুকিজ মুছে ফেললে আপনার অ্যাকাউন্ট ও জমানো হিসাব মুছে যাবে। তাই নিয়মিত বা ব্রাউজার পরিষ্কার করার আগে একটি JSON ব্যাকআপ সংরক্ষণ করুন।"
     ],
     termsTitle: "ব্যবহারের শর্তাবলী",
     termsList: [
       "WalletLedger Hub একটি সম্পূর্ণ বিনামূল্যে ব্যবহারের জন্য লোকাল ট্র্যাকার অ্যাপ। এটি 'যেমন আছে' (As-is) ভিত্তিতে প্রদান করা হয়েছে।",
-      "ডাটা স্টোরেজ দায়মুক্তি: আমরা কোনো এক্সটার্নাল সার্ভারে আপনার তথ্য সংরক্ষণ বা ব্যাকআপ রাখি না।",
-      "হিসাব মুছে যাওয়া: ব্রাউজার রিসেট, কুকি মুছে ফেলা, কিংবা হার্ডডিস্ক নষ্ট হওয়ার কারণে ডাটা হারিয়ে গেলে ডেভেলপার দায়ী থাকবে না।",
+      "ডাটা স্টোরেজ ও প্রোফাইল দায়মুক্তি: আমরা কোনো এক্সটার্নাল সার্ভারে আপনার নিবন্ধিত অ্যাকাউন্ট, পাসওয়ার্ড বা তথ্য সংরক্ষণ বা ব্যাকআপ রাখি না।",
+      "পাসওয়ার্ড ও হিসাব হারিয়ে যাওয়া: পাসওয়ার্ড ভুলে গেলে, ব্রাউজার রিসেট, কুকি মুছে ফেলা, কিংবা হার্ডডিস্ক নষ্ট হওয়ার কারণে ডাটা হারিয়ে গেলে ডেভেলপার দায়ী থাকবে না।",
       "উন্মুক্ত ব্যবহার: ব্যক্তিগত হিসাব সংরক্ষণের জন্য আপনি এই অ্যাপ্লিকেশনটি যেকোনোভাবে ব্যবহার, পরিবর্তন ও শেয়ার করতে পারবেন।"
     ],
     privacyTitle: "গোপনীয়তা এবং ডাটা পলিসি",
     privacyList: [
+      "লোকাল অথেন্টিকেশন: ব্যবহারকারী নিবন্ধন, মোবাইল নম্বর, ইমেইল এবং পাসওয়ার্ড সম্পূর্ণ অফলাইনে আপনার ব্রাউজারের লোকাল স্টোরেজে সংরক্ষিত থাকে। কোনো অ্যানালিটিক্স বা ক্লাউড সার্ভারের সাথে যোগাযোগ নেই।",
       "অ্যানালিটিক্স মুক্ত: আমরা আপনার ব্রাউজিং ট্র্যাক করার জন্য কোনো কুকিজ বা গুগল অ্যানালিটিক্স ব্যবহার করি না।",
-      "অফলাইন ব্যবহার: অ্যাপ্লিকেশনটি একবার লোড হওয়ার পর সম্পূর্ণ অফলাইনে কাজ করে। আপনার কোনো ডাটা এই ডিভাইস থেকে বাইরে যায় না।",
-      "লোকাল স্টোরেজ: তথ্য জমিয়ে রাখতে শুধুমাত্র আপনার ব্রাউজারের লোকাল স্টোরেজ (localStorage) প্রযুক্তি ব্যবহার করা হয়েছে।",
-      "তথ্য সংগ্রহহীনতা: আমরা কোনো ইমেইল ঠিকানা, নাম বা আর্থিক পরিসংখ্যান সংগ্রহ করি না।"
+      "অফলাইন ব্যবহার: অ্যাপ্লিকেশনটি একবার লোড হওয়ার পর সম্পূর্ণ অফলাইনে কাজ করে। আপনার কোনো ডাটা বা প্রোফাইল এই ডিভাইস থেকে বাইরে যায় না।",
+      "তথ্য সংগ্রহহীনতা: আমরা কোনো ইমেইল ঠিকানা, নাম বা আর্থিক পরিসংখ্যান কোনো কেন্দ্রীয় সার্ভারে সংগ্রহ করি না।"
     ],
     welcomeTitle: "ওয়ালেটলেজার হাবে আপনাকে স্বাগতম",
     welcomeSubtitle: "আপনার অফলাইন-ফার্স্ট, নিরাপদ এবং সম্পূর্ণ ব্যক্তিগত আর্থিক হিসাবরক্ষক সঙ্গী।",
     enterLedger: "লেজার হাবে প্রবেশ করুন",
     featureExpenses: "ব্যয় ও বাজেট হিসাব",
-    featureExpensesDesc: "তারিখ অনুযায়ী ক্যাটাগরি ও নোট সহ দৈনন্দিন ব্যয়ের হিসাব রাখুন ও বিশ্লেষণ করুন।",
+    featureExpensesDesc: "তারিখ অনুযায়ী ক্যাটাগরি ও নোট সহ দৈনিক ব্যয়ের হিসাব রাখুন ও বিশ্লেষণ করুন।",
     featureLoans: "ধার ও ঋণ লেজার",
     featureLoansDesc: "পাওনা এবং দেনার হিসাব ও পরিশোধের স্ট্যাটাস রুমমেট সামারিসহ সহজে ম্যানেজ করুন।",
     featureReflections: "ইসলামিক নির্দেশনা",

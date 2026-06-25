@@ -11,6 +11,7 @@ import DailyVerseCard from './components/DailyVerseCard';
 import DailyHadithCard from './components/DailyHadithCard';
 import DailyDuaCard from './components/DailyDuaCard';
 import QuranReader from './components/QuranReader';
+import AuthPage from './components/AuthPage';
 import { 
   Wallet, 
   ArrowLeftRight, 
@@ -34,7 +35,8 @@ import {
   ChevronUp,
   ChevronDown,
   ChevronsUp,
-  ChevronsDown
+  ChevronsDown,
+  LogOut
 } from 'lucide-react';
 
 export default function App() {
@@ -48,20 +50,17 @@ export default function App() {
     return `${now.getFullYear()}-${month}`;
   });
 
-  const [expenses, setExpenses] = useState(() => {
-    const raw = localStorage.getItem('expense_hub_expenses');
-    return raw ? JSON.parse(raw) : [];
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('expense_hub_current_user') || 'null');
+    } catch {
+      return null;
+    }
   });
 
-  const [loans, setLoans] = useState(() => {
-    const raw = localStorage.getItem('expense_hub_loans');
-    return raw ? JSON.parse(raw) : [];
-  });
-
-  const [incomes, setIncomes] = useState(() => {
-    const raw = localStorage.getItem('expense_hub_incomes');
-    return raw ? JSON.parse(raw) : {};
-  });
+  const [expenses, setExpenses] = useState([]);
+  const [loans, setLoans] = useState([]);
+  const [incomes, setIncomes] = useState({});
 
   const [activeTab, setActiveTab] = useState('expenses'); // 'expenses' or 'loans'
   const [toasts, setToasts] = useState([]);
@@ -129,21 +128,89 @@ export default function App() {
     document.body.classList.add(`theme-${theme}`);
   }, [theme]);
 
+  // Sync / load user-specific data when user changes
   useEffect(() => {
-    localStorage.setItem('expense_hub_expenses', JSON.stringify(expenses));
-  }, [expenses]);
+    if (currentUser) {
+      const uExp = localStorage.getItem(`expense_hub_${currentUser.mobile}_expenses`);
+      const uLoans = localStorage.getItem(`expense_hub_${currentUser.mobile}_loans`);
+      const uIncomes = localStorage.getItem(`expense_hub_${currentUser.mobile}_incomes`);
+      
+      setExpenses(uExp ? JSON.parse(uExp) : []);
+      setLoans(uLoans ? JSON.parse(uLoans) : []);
+      setIncomes(uIncomes ? JSON.parse(uIncomes) : {});
+    } else {
+      setExpenses([]);
+      setLoans([]);
+      setIncomes({});
+    }
+  }, [currentUser]);
+
+  // Save current user to local storage
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem('expense_hub_current_user', JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem('expense_hub_current_user');
+    }
+  }, [currentUser]);
 
   useEffect(() => {
-    localStorage.setItem('expense_hub_loans', JSON.stringify(loans));
-  }, [loans]);
+    if (currentUser) {
+      localStorage.setItem(`expense_hub_${currentUser.mobile}_expenses`, JSON.stringify(expenses));
+    }
+  }, [expenses, currentUser]);
 
   useEffect(() => {
-    localStorage.setItem('expense_hub_incomes', JSON.stringify(incomes));
-  }, [incomes]);
+    if (currentUser) {
+      localStorage.setItem(`expense_hub_${currentUser.mobile}_loans`, JSON.stringify(loans));
+    }
+  }, [loans, currentUser]);
+
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem(`expense_hub_${currentUser.mobile}_incomes`, JSON.stringify(incomes));
+    }
+  }, [incomes, currentUser]);
 
   useEffect(() => {
     localStorage.setItem('expense_hub_reflections_collapsed', JSON.stringify(reflectionsCollapsed));
   }, [reflectionsCollapsed]);
+
+  // 5 Minutes Idle Timeout Logic
+  useEffect(() => {
+    if (!currentUser) return;
+
+    let timeoutId;
+    const IDLE_TIME = 5 * 60 * 1000; // 5 minutes in ms
+
+    const logoutUser = () => {
+      setCurrentUser(null);
+      showToast(
+        lang === 'en'
+          ? "Logged out due to 5 minutes of inactivity."
+          : "৫ মিনিট নিষ্ক্রিয়তার কারণে লগ আউট করা হয়েছে।"
+      );
+    };
+
+    const resetIdleTimer = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(logoutUser, IDLE_TIME);
+    };
+
+    // Events to monitor for user activity
+    const events = ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'];
+    const handleActivity = () => resetIdleTimer();
+
+    events.forEach(event => window.addEventListener(event, handleActivity, { passive: true }));
+
+    // Start timer initially
+    resetIdleTimer();
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      events.forEach(event => window.removeEventListener(event, handleActivity));
+    };
+  }, [currentUser, lang]);
 
   // 3. Toast Helper
   const showToast = (message) => {
@@ -224,9 +291,11 @@ export default function App() {
     setExpenses([]);
     setLoans([]);
     setIncomes({});
-    localStorage.removeItem('expense_hub_expenses');
-    localStorage.removeItem('expense_hub_loans');
-    localStorage.removeItem('expense_hub_incomes');
+    if (currentUser) {
+      localStorage.removeItem(`expense_hub_${currentUser.mobile}_expenses`);
+      localStorage.removeItem(`expense_hub_${currentUser.mobile}_loans`);
+      localStorage.removeItem(`expense_hub_${currentUser.mobile}_incomes`);
+    }
     showToast(t.toastReset);
   };
 
@@ -236,6 +305,19 @@ export default function App() {
     if (importedData.incomes) setIncomes(importedData.incomes);
     showToast(t.toastSuccessImport);
   };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+  };
+
+  if (!currentUser) {
+    return (
+      <AuthPage 
+        lang={lang} 
+        onLoginSuccess={(user) => setCurrentUser(user)} 
+      />
+    );
+  }
 
   if (currentView === 'quran') {
     return (
@@ -446,6 +528,19 @@ export default function App() {
                 বাংলা
               </button>
             </div>
+
+            {/* Logout Button */}
+            {currentUser && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg panel-container text-[10px] font-extrabold uppercase text-rose-400 hover:text-rose-300 hover:bg-rose-500/5 transition-all cursor-pointer border-0"
+                title={lang === 'en' ? 'Log Out' : 'লগ আউট'}
+              >
+                <LogOut className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                <span className="hidden sm:inline">{lang === 'en' ? 'Log Out' : 'লগ আউট'}</span>
+              </button>
+            )}
           </div>
 
         </div>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ledgerhub-cache-v2';
+const CACHE_NAME = 'ledgerhub-cache-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -30,13 +30,13 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// Network-First strategy
 self.addEventListener('fetch', (e) => {
+  if (!e.request.url.startsWith('http')) return;
+
   e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(e.request).then((response) => {
+    fetch(e.request)
+      .then((response) => {
         // Cache newly fetched assets if they belong to our origin and are local files
         if (response && response.status === 200 && response.type === 'basic') {
           const responseToCache = response.clone();
@@ -45,9 +45,9 @@ self.addEventListener('fetch', (e) => {
           });
         }
         return response;
-      });
-    }).catch(() => {
-      // Offline fallback can be added here if needed
-    })
+      })
+      .catch(() => {
+        return caches.match(e.request);
+      })
   );
 });

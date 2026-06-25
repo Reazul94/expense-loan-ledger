@@ -10,7 +10,9 @@ import {
   Info,
   ChevronLeft,
   RefreshCw,
-  AlertCircle
+  AlertCircle,
+  ChevronsUp,
+  ChevronsDown
 } from 'lucide-react';
 import { surahList } from '../utils/quranData';
 import { toBengaliDigits } from './LedgerSelector';
@@ -21,36 +23,86 @@ export default function QuranReader({ lang, t, onClose }) {
   const [verses, setVerses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showScrollUp, setShowScrollUp] = useState(false);
+  const [showScrollDown, setShowScrollDown] = useState(true);
+  const [verseSearchQuery, setVerseSearchQuery] = useState('');
 
   // Scroll to top when view changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [selectedSurah]);
 
-  // Fetch surah verses (Arabic & Bengali translation)
+  // Handle scroll to toggle Up/Down scroll buttons
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+
+      // Show scroll up button if we've scrolled down more than 100px
+      setShowScrollUp(scrollTop > 100);
+
+      // Show scroll down button if we aren't near the bottom (more than 100px away)
+      setShowScrollDown(scrollTop + clientHeight < scrollHeight - 100);
+    };
+
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [selectedSurah, verses]);
+
+  // Fetch surah verses (Arabic, Bengali & English translations)
   const fetchSurah = async (surahNumber) => {
     setLoading(true);
     setError(null);
     setVerses([]);
 
     try {
-      const url = `https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-simple,bn.bengali`;
+      const url = `https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-simple,bn.bengali,en.sahih`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch Surah data.');
       }
       const json = await response.json();
       
-      if (json.code === 200 && json.data && json.data.length === 2) {
+      if (json.code === 200 && json.data && json.data.length === 3) {
         const arabicAyahs = json.data[0].ayahs;
         const bengaliAyahs = json.data[1].ayahs;
+        const englishAyahs = json.data[2].ayahs;
 
-        // Combine Arabic and Bengali verses
-        const combined = arabicAyahs.map((ayah, index) => ({
-          numberInSurah: ayah.numberInSurah,
-          arabic: ayah.text,
-          bengali: bengaliAyahs[index].text
-        }));
+        // Combine Arabic, Bengali, and English verses, and strip Bismillah prefix if necessary
+        let combined = arabicAyahs.map((ayah, index) => {
+          let arabicText = ayah.text;
+          if (surahNumber !== 1 && surahNumber !== 9 && index === 0) {
+            const bismillah = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
+            if (arabicText.startsWith(bismillah)) {
+              arabicText = arabicText.substring(bismillah.length).trim();
+            }
+          }
+          return {
+            numberInSurah: ayah.numberInSurah,
+            arabic: arabicText,
+            bengali: bengaliAyahs[index].text,
+            english: englishAyahs[index].text
+          };
+        });
+
+        // Special handling for Surah 1 (Al-Fatihah) to remove the Bismillah ayah (since it is rendered as header)
+        if (surahNumber === 1) {
+          // Remove the first ayah (which is Bismillah)
+          combined = combined.slice(1);
+          // Re-index the remaining ayahs so they start from 1
+          combined = combined.map((v, i) => ({
+            ...v,
+            numberInSurah: i + 1
+          }));
+        }
 
         setVerses(combined);
       } else {
@@ -78,6 +130,7 @@ export default function QuranReader({ lang, t, onClose }) {
     setSelectedSurah(null);
     setVerses([]);
     setError(null);
+    setVerseSearchQuery('');
   };
 
   // Filter surahs based on search query
@@ -97,6 +150,27 @@ export default function QuranReader({ lang, t, onClose }) {
   const getBnbDigits = (num) => {
     return lang === 'bn' ? toBengaliDigits(num.toString()) : num.toString();
   };
+
+  const banglaToEnglishDigits = (str) => {
+    const banglaDigits = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+    return str.replace(/[০-৯]/g, d => banglaDigits[d]);
+  };
+
+  const filteredVerses = verses.filter(v => {
+    const q = verseSearchQuery.toLowerCase().trim();
+    if (!q) return true;
+
+    const normalizedQ = banglaToEnglishDigits(q);
+
+    // Matches ayah number, Arabic text, Bengali translation, or English translation
+    return (
+      v.numberInSurah.toString() === q ||
+      v.numberInSurah.toString() === normalizedQ ||
+      v.arabic.includes(q) ||
+      v.bengali.toLowerCase().includes(q) ||
+      v.english.toLowerCase().includes(q)
+    );
+  });
 
   return (
     <div className="min-h-screen flex flex-col antialiased bg-[var(--bg-color)] text-[var(--text-color)] selection:bg-indigo-500/30 selection:text-indigo-200">
@@ -283,15 +357,50 @@ export default function QuranReader({ lang, t, onClose }) {
             {!loading && !error && verses.length > 0 && (
               <div className="space-y-6">
                 
-                {/* Bismillah Header (Except Surah 9 - At-Tawbah) */}
-                {selectedSurah.number !== 9 && (
-                  <div className="text-center py-8 border-b border-slate-800/40 font-serif text-2xl sm:text-3xl text-slate-200 leading-normal select-all">
-                    بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                {/* Search Input Bar for Verses */}
+                <div className="relative">
+                  <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-500" />
+                  <input
+                    type="text"
+                    placeholder={lang === 'en' ? 'Search Ayah by number, Arabic text, or translation...' : 'নাম্বার, আরবী বা অনুবাদ দিয়ে আয়াত খুঁজুন...'}
+                    value={verseSearchQuery}
+                    onChange={(e) => setVerseSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-10 py-3 rounded-2xl text-xs sm:text-sm focus:border-indigo-500/50 bg-slate-900/40 border border-slate-800"
+                  />
+                  {verseSearchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setVerseSearchQuery('')}
+                      className="absolute right-3 top-3.5 p-0.5 rounded-full text-slate-500 hover:text-slate-300 hover:bg-slate-800 transition-colors border-0 bg-transparent cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Bismillah Header (Except Surah 9 - At-Tawbah, and hide when searching) */}
+                {selectedSurah.number !== 9 && !verseSearchQuery.trim() && (
+                  <div className="text-center py-6 border-b border-slate-800/40 flex flex-col gap-2.5">
+                    {/* Arabic Bismillah */}
+                    <div className="font-serif text-2xl sm:text-3xl text-slate-200 leading-normal select-all">
+                      بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                    </div>
+                    {/* Translations */}
+                    <div className="space-y-1 max-w-lg mx-auto">
+                      {/* Bengali Bismillah translation */}
+                      <p className="text-xs sm:text-sm text-indigo-200/80 leading-relaxed font-medium">
+                        পরম করুণাময়, অসীম দয়ালুর নামে (শুরু করছি)।
+                      </p>
+                      {/* English Bismillah translation */}
+                      <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-medium italic">
+                        In the name of Allah, the Entirely Merciful, the Especially Merciful.
+                      </p>
+                    </div>
                   </div>
                 )}
 
                 {/* Verses Cards */}
-                {verses.map((v) => (
+                {filteredVerses.map((v) => (
                   <div 
                     key={v.numberInSurah} 
                     className="glass-card rounded-2xl p-5 border border-slate-800/80 flex flex-col gap-4 relative"
@@ -305,22 +414,61 @@ export default function QuranReader({ lang, t, onClose }) {
 
                     {/* Arabic Verse text */}
                     <p className="font-serif text-2xl sm:text-3xl text-right leading-loose tracking-wide text-slate-100 select-all py-1">
-                      {/* For Surah Fatiha (1) or others, if Bismillah is returned in verse 1 text, we can strip it, but simple display is standard. */}
                       {v.arabic}
                     </p>
 
-                    {/* Bengali Translation */}
-                    <p className="text-xs sm:text-sm text-indigo-200/90 leading-relaxed font-medium border-t border-slate-800/40 pt-3 pl-0.5 break-words">
-                      {v.bengali}
-                    </p>
+                    {/* Translations */}
+                    <div className="space-y-2 border-t border-slate-800/40 pt-3 pl-0.5">
+                      {/* Bengali Translation */}
+                      <p className="text-xs sm:text-sm text-indigo-200/90 leading-relaxed font-medium break-words">
+                        {v.bengali}
+                      </p>
+                      {/* English Translation */}
+                      <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-medium break-words italic">
+                        {v.english}
+                      </p>
+                    </div>
                   </div>
                 ))}
+
+                {/* No results fallback */}
+                {filteredVerses.length === 0 && (
+                  <div className="glass-card rounded-2xl p-8 border border-slate-800/60 text-center text-slate-500 text-xs font-semibold animate-fadeIn">
+                    {lang === 'en' ? 'No Ayahs match your search criteria.' : 'কোনো আয়াত খুঁজে পাওয়া যায়নি। আয়াতের নম্বর বা শব্দ ঠিকমতো লিখুন।'}
+                  </div>
+                )}
               </div>
             )}
           </div>
         )}
 
       </main>
+
+      {/* Floating scroll to top/bottom arrows */}
+      {(showScrollUp || showScrollDown) && (
+        <div className="fixed bottom-6 right-4 flex flex-col gap-3.5 z-50 animate-fadeIn">
+          {showScrollUp && (
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="w-11 h-11 rounded-full border border-slate-850 bg-slate-900/90 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 flex items-center justify-center transition-all cursor-pointer shadow-xl glow-indigo border-0 active:scale-90"
+              title={lang === 'en' ? 'Scroll to Top' : 'উপরে যান'}
+            >
+              <ChevronsUp className="w-5 h-5 shrink-0" />
+            </button>
+          )}
+          {showScrollDown && (
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })}
+              className="w-11 h-11 rounded-full border border-slate-850 bg-slate-900/90 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 flex items-center justify-center transition-all cursor-pointer shadow-xl glow-indigo border-0 active:scale-90"
+              title={lang === 'en' ? 'Scroll to Bottom' : 'নিচে যান'}
+            >
+              <ChevronsDown className="w-5 h-5 shrink-0" />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
