@@ -30,6 +30,8 @@ import {
   Smartphone,
   Laptop,
   ArrowRight,
+  ChevronUp,
+  ChevronDown,
   ChevronsUp,
   ChevronsDown
 } from 'lucide-react';
@@ -68,6 +70,10 @@ export default function App() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [showScrollUp, setShowScrollUp] = useState(false);
   const [showScrollDown, setShowScrollDown] = useState(true);
+  const [reflectionsCollapsed, setReflectionsCollapsed] = useState(() => {
+    const saved = localStorage.getItem('expense_hub_reflections_collapsed');
+    return saved ? JSON.parse(saved) : false;
+  });
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
@@ -132,6 +138,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('expense_hub_incomes', JSON.stringify(incomes));
   }, [incomes]);
+
+  useEffect(() => {
+    localStorage.setItem('expense_hub_reflections_collapsed', JSON.stringify(reflectionsCollapsed));
+  }, [reflectionsCollapsed]);
 
   // 3. Toast Helper
   const showToast = (message) => {
@@ -441,10 +451,49 @@ export default function App() {
         />
 
         {/* Daily Reflections Section (Quran, Hadith & Dua) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <DailyVerseCard lang={lang} t={t} />
-          <DailyHadithCard lang={lang} t={t} />
-          <DailyDuaCard lang={lang} t={t} />
+        <div className="panel-container border border-slate-800/80 bg-slate-900/20 rounded-3xl overflow-hidden transition-all duration-300 shadow-md">
+          <div 
+            onClick={() => setReflectionsCollapsed(!reflectionsCollapsed)}
+            className="flex items-center justify-between p-4 cursor-pointer hover:bg-slate-800/20 transition-all duration-300 select-none"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="p-1.5 rounded-lg bg-indigo-600/10 border border-indigo-500/20 text-indigo-400">
+                <Sparkles className="w-4 h-4 shrink-0" />
+              </div>
+              <div>
+                <h3 className="text-xs font-black uppercase tracking-wider text-slate-200">
+                  {lang === 'en' ? 'Daily Islamic Reflections' : 'প্রতিদিনের ইসলামী অনুধাবন'}
+                </h3>
+                <p className="text-[9px] text-slate-500 font-medium">
+                  {lang === 'en' 
+                    ? 'Curated Quranic verse, prophetic Hadith, and Duas for financial barakah'
+                    : 'আর্থিক বরকতের জন্য নির্বাচিত কুরআনের আয়াত, হাদিস ও প্রয়োজনীয় দোয়া'}
+                </p>
+              </div>
+            </div>
+            
+            <button
+              type="button"
+              className="p-1.5 rounded-lg hover:bg-slate-800/40 text-slate-400 hover:text-indigo-400 transition-all cursor-pointer border-0 bg-transparent"
+              aria-label="Toggle Reflections Section"
+            >
+              {reflectionsCollapsed ? (
+                <ChevronDown className="w-4 h-4 shrink-0" />
+              ) : (
+                <ChevronUp className="w-4 h-4 shrink-0" />
+              )}
+            </button>
+          </div>
+
+          <div className={`${
+            reflectionsCollapsed ? 'hidden' : 'block p-5 pt-0 border-t border-slate-800/30 bg-slate-950/20 animate-fadeIn'
+          }`}>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-5">
+              <DailyVerseCard lang={lang} t={t} />
+              <DailyHadithCard lang={lang} t={t} />
+              <DailyDuaCard lang={lang} t={t} />
+            </div>
+          </div>
         </div>
 
         {/* Dashboard Cards Row */}
