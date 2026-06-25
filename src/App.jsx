@@ -28,7 +28,9 @@ import {
   Download,
   Monitor,
   Smartphone,
-  Laptop
+  Laptop,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 
 export default function App() {
@@ -669,6 +671,25 @@ export default function App() {
           </div>
         </div>
       )}
+      {/* Floating scroll to top/bottom arrows */}
+      <div className="fixed bottom-24 right-5 flex flex-col gap-2 z-40">
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="p-3 rounded-full panel-container border border-slate-800/80 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all cursor-pointer shadow-xl glow-indigo border-0"
+          title={lang === 'en' ? 'Scroll to Top' : 'উপরে যান'}
+        >
+          <ArrowUp className="w-4 h-4" />
+        </button>
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })}
+          className="p-3 rounded-full panel-container border border-slate-800/80 text-indigo-400 hover:text-indigo-300 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all cursor-pointer shadow-xl glow-indigo border-0"
+          title={lang === 'en' ? 'Scroll to Bottom' : 'নিচে যান'}
+        >
+          <ArrowDown className="w-4 h-4" />
+        </button>
+      </div>
 
       {/* Floating Toast notifications container */}
       <div className="fixed bottom-5 right-5 flex flex-col gap-2.5 z-50 pointer-events-none">
