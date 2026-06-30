@@ -1,16 +1,19 @@
-# Shared Expense & Settlement Hub
+# WalletLedger Hub (Expense & Loan Ledger)
 
-A professional, React-based Shared Grocery (Bazar) Cost Tracker and Settlement Ledger designed for roommates and families. Features real-time split calculations, custom interactive daily analytics charts, PDF settlement report downloads, and Excel sheet exports.
+A professional, React-based offline-first personal finance tracker seamlessly integrated with a comprehensive Islamic library. Designed for privacy and accessibility, it features expense and loan tracking, a fully offline Quran Explorer, Hadith Explorer (Sihah Sittah), interactive daily reflections, and a dual analog/digital clock widget. The application runs entirely in your browser with secure local storage and PWA support.
 
 ## Tech Stack
 * **Framework:** React (Vite)
 * **Styling:** Tailwind CSS v3
 * **Icons:** Lucide React
-* **PDF Generation:** jsPDF + jsPDF-AutoTable
+* **Architecture:** Offline-First Progressive Web App (PWA) with LocalStorage
 
-## Split Ratio Configuration
-* Reza = 58.33%
-* Reaz = 41.67%
+## Key Features
+* **Expense & Loan Management:** Track your daily expenses and manage loans completely offline.
+* **Quran & Hadith Explorer:** Full 114 Surahs and the 6 Sahih Hadith books (Sihah Sittah) with Arabic, Bengali, and English translations.
+* **Data Security & Portability:** 100% serverless. Export and Import your data securely via JSON backups.
+* **Multi-Language UI:** Seamlessly switch between English and Bengali interfaces.
+* **PWA Ready:** Installable on iOS, Android, and Desktop for a native app experience.
 
 ## How to Install and Run Locally
 Anyone can download and run this project on their own computer or network. Follow these simple steps:
